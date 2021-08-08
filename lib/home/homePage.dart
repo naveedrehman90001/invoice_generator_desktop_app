@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       
                       Flexible(
-                          flex: 3,
+                          flex: 10,
                           child: GridView.count(
                             padding: EdgeInsets.all(10),
                             crossAxisCount: 3,
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           )),
                       Flexible(
-                          flex: 2,
+                          flex: 4,
                           child: Container(
                             margin: EdgeInsets.only(right: 60, top: 25),
                             child: Column(
