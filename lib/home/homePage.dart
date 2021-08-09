@@ -14,17 +14,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          color: Colors.red,
-          // decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //         image: NetworkImage(
-          //           "https://www.libracoffee.io/bg.jpg",
-          //         ),
-          //         fit: BoxFit.cover)),
+          // color: Colors.red,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/back.jpg'),
+                  fit: BoxFit.cover)),
           child: Row(
             children: [
               Container(
-                width: 225,
+                width: MediaQuery.of(context).size.width * 0.17,
                 height: deviceSize.height,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -38,7 +36,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Container(
-                      height: 150,
+                      height: 100,
                       margin: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         border: Border(
@@ -49,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           SizedBox(
-                            height: 15,
+                            height: 5,
                           ),
                           Center(
                             child: Image.network(
@@ -57,11 +55,59 @@ class _HomePageState extends State<HomePage> {
                               width: 150,
                             ),
                           ),
-                          Image.network(
-                            "https://www.libracoffee.io/img/logo.f597cc3f.png",
-                            width: 130,
-                          ),
                         ],
+                      ),
+                    ),
+
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(left: 10 , right: 10),
+                      child: Text(
+                                'Tables',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.purple,
+                                ),
+                              ),
+                    ),
+
+                    Container(
+                      height: 150,
+                      margin : EdgeInsets.only(left: 10 , right: 10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1.0,color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      // color: Colors.green,
+                      child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                childAspectRatio: 1,
+                crossAxisSpacing: 1,
+                mainAxisSpacing: 1),
+            itemCount: 5,
+            itemBuilder: (BuildContext ctx, index) {
+              return Container(
+                margin: EdgeInsets.all(5.0),
+                height: 40,
+                width: 40,
+                color: Colors.purple,
+              );
+            })
+                    ),
+
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(left: 10, bottom: 10),
+                      child: Text(
+                        'Categories',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple,
+                        ),
                       ),
                     ),
 
@@ -111,16 +157,20 @@ class _HomePageState extends State<HomePage> {
                             height: 15,
                           ),
                           Center(
-                            child: Image.network(
-                              "https://www.flutter.dev//assets/flutter-lockup-c13da9c9303e26b8d5fc208d2a1fa20c1ef47eb021ecadf27046dea04c0cebf6.png",
-                              width: 150,
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/dotcoderlogo.png')),
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Text("Powered by Flutter Angola"),
-                          Text("Dev: Márcio Quimbundo"),
+                          Text("Powered by DOTCODER"),
+                          Text("Dev: Team"),
                         ],
                       ),
                     ),
@@ -132,57 +182,90 @@ class _HomePageState extends State<HomePage> {
                   height: deviceSize.height,
                   child: Row(
                     children: [
-                      
                       Flexible(
                           flex: 10,
-                          child: GridView.count(
-                            padding: EdgeInsets.all(10),
-                            crossAxisCount: 3,
-                            childAspectRatio: .95,
-                            children: [
-                              itemTile(),
-                              itemTile(),
-                              itemTile(), itemTile(),
-                              itemTile(),
-                               itemTile(),
-                              itemTile(),
-                              itemTile(), itemTile(),
-                              itemTile(),
-                              // ProductBox(
-                              //     title: "Expresso",
-                              //     description: "Blue Ridge Blend",
-                              //     image: "assets/images/espresso.51d468cc.jpg",
-                              //     price: 4.35),
-                              // ProductBox(
-                              //     title: "Choco Frappe",
-                              //     description: "Locally Roasted",
-                              //     image:
-                              //         "assets/images/choco_frappe.b233b3b8.jpg",
-                              //     price: 7.00),
-                              // ProductBox(
-                              //     title: "Caramel Frappe",
-                              //     description: "Decaf Colombia",
-                              //     image:
-                              //         "assets/images/caramel_frappe.ce2f41eb.jpg",
-                              //     price: 7.50),
-                              // ProductBox(
-                              //     title: "Kick Frappe",
-                              //     description: "Locally Roasted",
-                              //     image:
-                              //         "assets/images/kick_frappe.1e205836.jpg",
-                              //     price: 7.50),
-                              // ProductBox(
-                              //     title: "Cappuccino",
-                              //     description: "Decaf Colombia",
-                              //     image:
-                              //         "assets/images/cappuccino.2667eed1.jpg",
-                              //     price: 4.50),
-                            ],
+                          child: Container(
+                            // margin: EdgeInsets.only(left: 20 ),
+                            child: Column(
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                      top: 20,
+                                      left: 20,
+                                      right: 20,
+                                    ),
+                                    color: Colors.white,
+                                    child: Center(
+                                      child: Text(
+                                        'Table 4',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            color: Colors.purple,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 5,
+                                  fit: FlexFit.tight,
+                                  child: Container(
+                                    child: GridView.count(
+                                      padding: EdgeInsets.all(10),
+                                      crossAxisCount: 4,
+                                      childAspectRatio: 0.8,
+                                      children: [
+                                        itemTile(),
+                                        itemTile(),
+                                        itemTile(), itemTile(),
+                                        itemTile(),
+                                        itemTile(),
+                                        itemTile(),
+                                        itemTile(), itemTile(),
+                                        itemTile(),
+                                        // ProductBox(
+                                        //     title: "Expresso",
+                                        //     description: "Blue Ridge Blend",
+                                        //     image: "assets/images/espresso.51d468cc.jpg",
+                                        //     price: 4.35),
+                                        // ProductBox(
+                                        //     title: "Choco Frappe",
+                                        //     description: "Locally Roasted",
+                                        //     image:
+                                        //         "assets/images/choco_frappe.b233b3b8.jpg",
+                                        //     price: 7.00),
+                                        // ProductBox(
+                                        //     title: "Caramel Frappe",
+                                        //     description: "Decaf Colombia",
+                                        //     image:
+                                        //         "assets/images/caramel_frappe.ce2f41eb.jpg",
+                                        //     price: 7.50),
+                                        // ProductBox(
+                                        //     title: "Kick Frappe",
+                                        //     description: "Locally Roasted",
+                                        //     image:
+                                        //         "assets/images/kick_frappe.1e205836.jpg",
+                                        //     price: 7.50),
+                                        // ProductBox(
+                                        //     title: "Cappuccino",
+                                        //     description: "Decaf Colombia",
+                                        //     image:
+                                        //         "assets/images/cappuccino.2667eed1.jpg",
+                                        //     price: 4.50),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )),
                       Flexible(
-                          flex: 4,
+                          flex: 5,
                           child: Container(
-                            margin: EdgeInsets.only(right: 60, top: 25),
+                            margin: EdgeInsets.only(right: 20, top: 25),
                             child: Column(
                               children: [
                                 Container(

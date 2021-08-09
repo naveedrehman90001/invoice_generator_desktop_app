@@ -5,6 +5,7 @@ Widget itemTile(){
   return Container(
       margin: EdgeInsets.all(10),
       // padding: EdgeInsets.all(10),
+      height: 350,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -27,16 +28,16 @@ Widget itemTile(){
                   fontSize: 20),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(bottom:10,left:10,right:10),
-            child: Text(
-              'product description',
-              style: TextStyle(
-                  color: Colors.black45,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14),
-            ),
-          ),
+          // Container(
+          //   margin: EdgeInsets.only(bottom:10,left:10,right:10),
+          //   child: Text(
+          //     'product description',
+          //     style: TextStyle(
+          //         color: Colors.black45,
+          //         fontWeight: FontWeight.w600,
+          //         fontSize: 14),
+          //   ),
+          // ),
 
           Center(
             child: Container(
