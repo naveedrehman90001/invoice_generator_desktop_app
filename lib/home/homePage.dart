@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                         border: Border.all(width: 1.0,color: Colors.grey),
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      
+                      // color: Colors.green,
                       child: GridView.builder(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                 margin: EdgeInsets.all(5.0),
                 height: 40,
                 width: 40,
-                color: Colors.purple,
+                // color: Colors.purple,
               );
             })
                     ),
