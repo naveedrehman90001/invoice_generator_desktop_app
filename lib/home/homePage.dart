@@ -146,6 +146,45 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+<<<<<<< HEAD
+=======
+
+                    menuListTile(),
+                    menuListTile(),
+                    menuListTile(),
+
+                    // MenuListTile(
+                    //   title: "Coffe",
+                    //   active: true,
+                    //   image:
+                    //       "https://www.libracoffee.io/img/coffee.3fa69bf4.svg",
+                    // ),
+                    // MenuListTile(
+                    //   title: "Breakfast",
+                    //   active: false,
+                    //   image:
+                    //       "https://www.libracoffee.io/img/breakfast.7ffe88f4.svg",
+                    // ),
+                    // MenuListTile(
+                    //   title: "Snack",
+                    //   active: false,
+                    //   image:
+                    //       "https://www.libracoffee.io/img/munchies.f0cf6706.svg",
+                    // ),
+                    // MenuListTile(
+                    //   title: "Fast food",
+                    //   active: false,
+                    //   image:
+                    //       "https://www.libracoffee.io/img/sandwiches.8a4f25d0.svg",
+                    // ),
+                    // MenuListTile(
+                    //   title: "Special Drinks",
+                    //   active: false,
+                    //   image:
+                    //       "https://www.libracoffee.io/img/special-drinks.6151c892.svg",
+                    // ),
+                    Spacer(),
+>>>>>>> c458ffcd47a6b8b5eef0fed6b270f8ebc466f6e1
                     Container(
                       height: MediaQuery.of(context).size.height * 0.38,
                       child: ListView.builder(
