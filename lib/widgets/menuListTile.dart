@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-<<<<<<< HEAD
-Widget? menuListTile({String? title}) {
+Widget menuListTile({String title}) {
 
 
-=======
-Widget menuListTile() {
->>>>>>> c458ffcd47a6b8b5eef0fed6b270f8ebc466f6e1
   return Container(
     margin: EdgeInsets.only(bottom: 10),
     child: Row(
@@ -35,7 +31,7 @@ Widget menuListTile() {
                   ? Border(bottom: BorderSide(color: Colors.green, width: 5))
                   : Border()),
           child: Text(
-            title!,
+            title,
             textAlign: TextAlign.left,
             style: TextStyle(
                 color: Colors.black,
