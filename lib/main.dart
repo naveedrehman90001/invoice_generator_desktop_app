@@ -24,7 +24,7 @@ Future<void> main() async {
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CartModelAdapter());
   Hive.registerAdapter(CategoriesAdapter());
-  // await Hive.initFlutter();
+  await Hive.initFlutter();
   await _openBox();
   runApp(MyApp());
 }

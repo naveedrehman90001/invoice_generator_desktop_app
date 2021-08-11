@@ -13,6 +13,8 @@ class CartModel {
   int quantity;
 @HiveField(3)
   double price;
+@HiveField(4)
+  int tableNo;
 
-  CartModel({this.item,this.img,this.price,this.quantity});
+  CartModel({this.item,this.img,this.price,this.quantity,this.tableNo});
 }
