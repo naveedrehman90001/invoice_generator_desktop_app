@@ -1,4 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:spicy_destop_invoic_app/models/cartModel.dart';
+import 'package:spicy_destop_invoic_app/models/categories.dart';
+import 'package:spicy_destop_invoic_app/models/subCategory.dart';
+import 'package:spicy_destop_invoic_app/utils/data.dart';
 import 'package:spicy_destop_invoic_app/widgets/itemTile.dart';
 import 'package:spicy_destop_invoic_app/widgets/menuListTile.dart';
 
@@ -9,6 +15,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isSelectedTable = false;
+  int selectedTable;
+  int selectedCategoryIndex;
+
+  Categories selectedCategory;
 
   List<String> categoriesList = [
     'Pizza',
@@ -28,20 +38,27 @@ class _HomePageState extends State<HomePage> {
 
   int count = 0;
 
-  _incrementQty(){
-
-    count ++;
-    setState(() {
-      
-    });
-
+  _incrementQty() {
+    count++;
+    setState(() {});
   }
 
-  _decrementQty(){
-    count --;
-    setState(() {
-      
-    });
+  _decrementQty() {
+    count--;
+    setState(() {});
+  }
+
+  var categoryBoxxx;
+  getCategoryBox() async {
+    categoryBoxxx = await Hive.box(categoryBox);
+    setState(() {});
+  }
+
+  List<SubCategory> subList = [];
+  @override
+  void initState() {
+    getCategoryBox();
+    super.initState();
   }
 
   @override
@@ -106,46 +123,94 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Container(
-                      height: 150,
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1.0, color: Colors.grey),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      // color: Colors.green,
-                      child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                          ),
-                          itemCount: 8,
-                          itemBuilder: (_, index) {
-                            return InkWell(
-                              onTap: (){
-                                isSelectedTable =! isSelectedTable;
-                                setState(() {
-                                  
-                                });
-                              },
-                              child: Container(
-                                  margin: EdgeInsets.all(5.0),
-                                  decoration: isSelectedTable
-                                      ? BoxDecoration(
-                                          border: Border.all(
-                                              width: 1.0, color: Colors.grey),
-                                        )
-                                      : BoxDecoration(
-                                          color: Colors.purple,
-                                        ),
-                                        child: Center(
-                                          child: Text('$index',style: TextStyle(color: isSelectedTable ? Colors.purple : Colors.white),),
-                                        ),
-                                        ),
-                            );
-                          }),
-                    ),
+                    ValueListenableBuilder(
+                        valueListenable: Hive.box<int>(tableBox).listenable(),
+                        builder: (context, box, _) {
+                          return Container(
+                            height: 150,
+                            margin: EdgeInsets.only(left: 10, right: 10),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1.0, color: Colors.grey),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            // color: Colors.green,
+
+                            child: (box.isEmpty)
+                                ? InkWell(
+                                    onTap: () =>
+                                        box.put(box.length, box.length),
+                                    onLongPress: () =>
+                                        box.deleteAt(box.length - 1),
+                                    child: Container(
+                                      margin: EdgeInsets.all(5.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1.0, color: Colors.grey),
+                                      ),
+                                      child: Center(
+                                          child: Icon(Icons
+                                              .add) //Text('$index',style: TextStyle(color: isSelectedTable ? Colors.purple : Colors.white),),
+                                          ),
+                                    ),
+                                  )
+                                : GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                    ),
+                                    itemCount: box.length + 1,
+                                    itemBuilder: (_, index) {
+                                      return (box.length == index)
+                                          ? InkWell(
+                                              onTap: () => box.put(
+                                                  box.length, box.length),
+                                              child: Container(
+                                                margin: EdgeInsets.all(5.0),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 1.0,
+                                                      color: Colors.grey),
+                                                ),
+                                                child: Center(
+                                                    child: Icon(Icons
+                                                        .add) //Text('$index',style: TextStyle(color: isSelectedTable ? Colors.purple : Colors.white),),
+                                                    ),
+                                              ),
+                                            )
+                                          : InkWell(
+                                              onTap: () {
+                                                selectedTable = index;
+                                                setState(() {});
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.all(5.0),
+                                                decoration: selectedTable !=
+                                                        index
+                                                    ? BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 1.0,
+                                                            color: Colors.grey),
+                                                      )
+                                                    : BoxDecoration(
+                                                        color: Colors.purple,
+                                                      ),
+                                                child: Center(
+                                                  child: Text(
+                                                    '$index',
+                                                    style: TextStyle(
+                                                        color: selectedTable !=
+                                                                index
+                                                            ? Colors.purple
+                                                            : Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                    }),
+                          );
+                        }),
                     Container(
                       alignment: Alignment.topLeft,
                       margin: EdgeInsets.only(left: 10, bottom: 10),
@@ -158,19 +223,63 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.38,
-                      child: ListView.builder(
-                        itemCount: categoriesList.length,
-                        // physics: NeverScrollableScrollPhysics(),
-                        // shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return menuListTile(
-                            title: categoriesList[index],
-                          );
-                        },
-                      ),
-                    ),
+                    ValueListenableBuilder<Box<Categories>>(
+                        valueListenable:
+                            Hive.box<Categories>(categoryBox).listenable(),
+                        builder: (context, box, _) {
+                          var cate = box.values.toList().cast<Categories>();
+                          return Container(
+                              height: MediaQuery.of(context).size.height * 0.38,
+                              child: (box == null)
+                                  ? InkWell(
+                                      onTap: () {
+                                        Categories cat = Categories(
+                                          categoryName: 'Pizza',
+                                          imageName: '',
+                                          subcatery: [],
+                                        );
+                                        box.add(cat);
+                                      },
+                                      child: Container(
+                                        child: Icon(Icons.add),
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: cate.length + 1,
+                                      // physics: NeverScrollableScrollPhysics(),
+                                      // shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return (cate.length == index)
+                                            ? ListTile(
+                                                leading: Icon(Icons.add),
+                                                onTap: () {
+                                                  Categories cat = Categories(
+                                                    categoryName: 'Pizza',
+                                                    imageName: '',
+                                                    subcatery: [],
+                                                  );
+                                                  box.add(cat);
+                                                },
+                                              )
+                                            : InkWell(
+                                                onTap: () {
+                                                  selectedCategoryIndex = index;
+                                                  selectedCategory =cate[index];
+                                                  subList =
+                                                      cate[index].subcatery;
+                                                  setState(() {});
+                                                },
+                                                onLongPress: (){
+                                                  box.deleteAt(index);
+                                                },
+                                                child: menuListTile(
+                                                  title:
+                                                      cate[index].categoryName,
+                                                ),
+                                              );
+                                      },
+                                    ));
+                        }),
                     Container(
                       height: 40,
                       width: 120,
@@ -207,7 +316,8 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     child: Center(
                                       child: Text(
-                                        'Table 4',
+                                        'Table ' + selectedTable.toString() ??
+                                            "",
                                         style: TextStyle(
                                             fontSize: 30,
                                             color: Colors.purple,
@@ -220,16 +330,76 @@ class _HomePageState extends State<HomePage> {
                                   flex: 5,
                                   fit: FlexFit.tight,
                                   child: Container(
-                                    child: GridView.builder(
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 4,
-                                          childAspectRatio: 0.80,
-                                        ),
-                                        itemCount: 8,
-                                        itemBuilder: (_, index) {
-                                          return itemTile();
-                                        }),
+                                    child: (selectedCategoryIndex == null)
+                                        ? Center(
+                                            child: Text(
+                                              'Category not Selected',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          )
+                                        : (subList == null)
+                                            ? InkWell(
+                                              onTap: (){
+                                                SubCategory sub = SubCategory(
+                                                  itemImage: "",
+                                                  itemName: "kbx",
+                                                  price: 600,
+                                                  quantity: 1,
+                                                );
+                                                selectedCategory.subcatery.add(sub);
+                                                categoryBoxxx.putAt(selectedCategoryIndex,selectedCategory );
+                                              },
+                                              child: Container(
+                                                  child: Center(
+                                                  child: Text(
+                                                    'Category is Empty\nClick To add SubCategory',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                )),
+                                            )
+                                            : (subList.isEmpty)
+                                                ? InkWell(
+                                                  onTap: (){
+                                                SubCategory sub = SubCategory(
+                                                  itemImage: "",
+                                                  itemName: "tfytf",
+                                                  price: 500,
+                                                  quantity: 1,
+                                                );
+                                                selectedCategory.subcatery.add(sub);
+                                                print(selectedCategory.subcatery.length);
+                                               categoryBoxxx.putAt(selectedCategoryIndex,selectedCategory );
+                                              },
+                                                  child: Container(
+                                                      child: Center(
+                                                      child: Text(
+                                                        'Category is Empty\nClick To add SubCategory',
+                                                        style: TextStyle(
+                                                            color: Colors.white),
+                                                      ),
+                                                    )),
+                                                )
+                                                : GridView.builder(
+                                                    gridDelegate:
+                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 4,
+                                                      childAspectRatio: 0.90,
+                                                    ),
+                                                    itemCount:
+                                                        subList.length + 1,
+                                                    itemBuilder: (_, index) {
+                                                      return (subList.length ==
+                                                              index)
+                                                          ? Container(
+                                                            color: Colors.green,
+                                                              child: Icon(
+                                                                  Icons.add),
+                                                            )
+                                                          : InkWell(
+                                                            child: itemTile(subList[index]));
+                                                    }),
                                   ),
                                 ),
                               ],
@@ -327,127 +497,147 @@ class _HomePageState extends State<HomePage> {
                                 Flexible(
                                   flex: 8,
                                   fit: FlexFit.tight,
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: ListView.separated(
-                                      separatorBuilder: (context, index) =>
-                                          Divider(),
-                                      itemCount: 40,
-                                      itemBuilder: (context, index) {
+                                  child: ValueListenableBuilder<Box<CartModel>>(
+                                      valueListenable:
+                                          Hive.box<CartModel>(cartBox)
+                                              .listenable(),
+                                      builder: (context, box, _) {
                                         return Container(
-                                          margin: EdgeInsets.only(left: 10),
-                                            height: 40,
-                                            child: Row(
-                                              children: [
-                                                Flexible(
-                                                  flex: 4,
-                                                  fit: FlexFit.tight,
-                                                  child: Container(
-                                                    // color: Colors.amber,
-                                                    child: Text('My Prod'),
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  flex: 2,
-                                                  fit: FlexFit.tight,
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 5,
-                                                        bottom: 5,
-                                                        left: 5,
-                                                        right: 5),
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            width: 1,
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: Row(
-                                                      children: [
-                                                        Flexible(
-                                                          flex: 1,
-                                                          fit: FlexFit.tight,
-                                                          child: InkWell(
-                                                            onTap: (){
-                                                              _decrementQty();
-                                                            },
-                                                            child: Container(
-                                                              height:
-                                                                  double.infinity,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color:
-                                                                    Colors.purple,
+                                          color: Colors.white,
+                                          child: ListView.separated(
+                                            separatorBuilder:
+                                                (context, index) => Divider(),
+                                            itemCount: 40,
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 10),
+                                                  height: 40,
+                                                  child: Row(
+                                                    children: [
+                                                      Flexible(
+                                                        flex: 4,
+                                                        fit: FlexFit.tight,
+                                                        child: Container(
+                                                          // color: Colors.amber,
+                                                          child:
+                                                              Text('My Prod'),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        flex: 2,
+                                                        fit: FlexFit.tight,
+                                                        child: Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  top: 5,
+                                                                  bottom: 5,
+                                                                  left: 5,
+                                                                  right: 5),
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  width: 1,
+                                                                  color: Colors
+                                                                      .grey)),
+                                                          child: Row(
+                                                            children: [
+                                                              Flexible(
+                                                                flex: 1,
+                                                                fit: FlexFit
+                                                                    .tight,
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    _decrementQty();
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height: double
+                                                                        .infinity,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .purple,
+                                                                    ),
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .remove,
+                                                                      size: 12,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                              child: Icon(
-                                                                Icons.remove,
-                                                                size: 12,
-                                                                color:
-                                                                    Colors.white,
+                                                              Flexible(
+                                                                flex: 2,
+                                                                fit: FlexFit
+                                                                    .tight,
+                                                                child:
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                        '$count'),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                              Flexible(
+                                                                flex: 1,
+                                                                fit: FlexFit
+                                                                    .tight,
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    _incrementQty();
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height: double
+                                                                        .infinity,
+                                                                    color: Colors
+                                                                        .purple,
+                                                                    child: Icon(
+                                                                      Icons.add,
+                                                                      size: 12,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
-                                                        Flexible(
-                                                          flex: 2,
-                                                          fit: FlexFit.tight,
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            child: Center(
-                                                              child: Text('$count'),
-                                                            ),
-                                                          ),
+                                                      ),
+                                                      Flexible(
+                                                        flex: 2,
+                                                        fit: FlexFit.tight,
+                                                        child: Container(
+                                                          child: Text('20000'),
                                                         ),
-                                                        Flexible(
-                                                          flex: 1,
-                                                          fit: FlexFit.tight,
-                                                          child: InkWell(
-                                                            onTap: (){
-                                                              _incrementQty();
-                                                            },
-                                                            child: Container(
-                                                              height:
-                                                                  double.infinity,
-                                                              color:
-                                                                  Colors.purple,
-                                                              child: Icon(
-                                                                Icons.add,
-                                                                size: 12,
-                                                                color:
-                                                                    Colors.white,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  flex: 2,
-                                                  fit: FlexFit.tight,
-                                                  child: Container(
-                                                    child: Text('20000'),
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  flex: 1,
-                                                  fit: FlexFit.tight,
-                                                  child: Container(
-                                                    // color: Colors.amber,
+                                                      ),
+                                                      Flexible(
+                                                        flex: 1,
+                                                        fit: FlexFit.tight,
+                                                        child: Container(
+                                                          // color: Colors.amber,
 
-                                                    child: Icon(
-                                                        Icons.delete_forever,size: 18,),
-                                                  ),
-                                                )
-                                              ],
-                                            ));
-                                      },
-                                    ),
-                                  ),
+                                                          child: Icon(
+                                                            Icons
+                                                                .delete_forever,
+                                                            size: 18,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ));
+                                            },
+                                          ),
+                                        );
+                                      }),
                                 ),
                                 Flexible(
                                   flex: 1,
@@ -499,13 +689,14 @@ class _HomePageState extends State<HomePage> {
                                   fit: FlexFit.tight,
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(top : 5, bottom: 5),
+                                    margin: EdgeInsets.only(top: 5, bottom: 5),
                                     color: Colors.white,
                                     child: MaterialButton(
-                                      onPressed: (){
-
-                                      },
-                                      child: Text('Pay', style: TextStyle(fontSize: 18),),
+                                      onPressed: () {},
+                                      child: Text(
+                                        'Pay',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -515,7 +706,6 @@ class _HomePageState extends State<HomePage> {
                                   child: Container(
                                     width: double.infinity,
                                     // color: Colors.white,
-                                    
                                   ),
                                 ),
                               ],

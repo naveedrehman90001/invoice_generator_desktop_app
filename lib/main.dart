@@ -14,7 +14,7 @@ import 'home/myTestingTable.dart';
 
 Future<void> _openBox() async {
 
-   await Hive.openBox<Category>(categoryBox);
+   await Hive.openBox<Categories>(categoryBox);
    await Hive.openBox<CartModel>(cartBox);
   await Hive.openBox<int>(tableBox);
 
@@ -25,8 +25,8 @@ Future<void> main() async {
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CartModelAdapter());
   Hive.registerAdapter(CategoriesAdapter());
-  await Hive.initFlutter();
-  await _openBox();
+  // await Hive.initFlutter();
+  // await _openBox();
   runApp(MyApp());
 }
 
@@ -63,7 +63,34 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      // home: HomePage(),
+      home: FutureBuilder(
+            future: Future.wait([
+              Hive.openBox<int>(tableBox),
+              Hive.openBox<CartModel>(cartBox),
+              Hive.openBox<Categories>(categoryBox),
+            ]),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.error != null) {
+                  print(snapshot.error);
+                  return Scaffold(
+                    body: Center(
+                      child: Text('Something went wrong :/'),
+                    ),
+                  );
+                } else {
+                  return HomePage();
+                }
+              } else {
+                return Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            },
+          ),
     );
   }
 }

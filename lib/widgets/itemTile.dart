@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:spicy_destop_invoic_app/models/subCategory.dart';
 
-Widget itemTile(){
+Widget itemTile(SubCategory subCategory){
   return Container(
       margin: EdgeInsets.all(10),
       // padding: EdgeInsets.all(10),
@@ -21,7 +22,7 @@ Widget itemTile(){
           Container(
             margin: EdgeInsets.only(top:10,left:10,right:10),
             child: Text(
-              'product title',
+              subCategory.itemName,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
@@ -52,18 +53,18 @@ Widget itemTile(){
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 4),
-                      child: Image.network(
-                        "https://www.libracoffee.io/img/icon-libra@3x.c0fc5777.png",
-                        width: 25,
-                      ),
-                    ),
+                    // Container(
+                    //   margin: EdgeInsets.only(top: 4),
+                    //   child: Image.network(
+                    //     "https://www.libracoffee.io/img/icon-libra@3x.c0fc5777.png",
+                    //     width: 25,
+                    //   ),
+                    // ),
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      '2000',
+                    Text('RS '+
+                      subCategory.price.toString(),
                       style: TextStyle(
                           color: Colors.green,
                           fontWeight: FontWeight.normal,
