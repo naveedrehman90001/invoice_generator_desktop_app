@@ -122,16 +122,28 @@ class _HomePageState extends State<HomePage> {
                           ),
                           itemCount: 8,
                           itemBuilder: (_, index) {
-                            return Container(
-                                margin: EdgeInsets.all(5.0),
-                                decoration: isSelectedTable
-                                    ? BoxDecoration(
-                                        border: Border.all(
-                                            width: 1.0, color: Colors.grey),
-                                      )
-                                    : BoxDecoration(
-                                        color: Colors.purple,
-                                      ));
+                            return InkWell(
+                              onTap: (){
+                                isSelectedTable =! isSelectedTable;
+                                setState(() {
+                                  
+                                });
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.all(5.0),
+                                  decoration: isSelectedTable
+                                      ? BoxDecoration(
+                                          border: Border.all(
+                                              width: 1.0, color: Colors.grey),
+                                        )
+                                      : BoxDecoration(
+                                          color: Colors.purple,
+                                        ),
+                                        child: Center(
+                                          child: Text('$index',style: TextStyle(color: isSelectedTable ? Colors.purple : Colors.white),),
+                                        ),
+                                        ),
+                            );
                           }),
                     ),
                     Container(

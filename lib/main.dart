@@ -3,6 +3,7 @@ import'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:spicy_destop_invoic_app/home/homePage.dart';
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 import 'package:spicy_destop_invoic_app/models/categories.dart';
 import 'package:spicy_destop_invoic_app/utils/data.dart';
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyTestingTable(),
+      home: HomePage(),
     );
   }
 }
