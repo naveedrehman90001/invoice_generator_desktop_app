@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -6,6 +7,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:spicy_destop_invoic_app/home/homePage.dart';
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 import 'package:spicy_destop_invoic_app/models/categories.dart';
+import 'package:spicy_destop_invoic_app/models/subCategory.dart';
 import 'package:spicy_destop_invoic_app/utils/data.dart';
 
 import 'home/myTestingTable.dart';
@@ -20,13 +22,33 @@ Future<void> _openBox() async {
 
  
 }
+
+bool Use_Emulator = true;
 Future<void> main() async {
+// WidgetsFlutterBinding.ensureInitialized();
+// await Firebase.initializeApp();
+// String host = '';
+
+// if(kIsWeb){
+//   host = '10.1.81.182:8080';
+// }else if(Platform.isAndroid){
+//     host = '10.0.2.2:8080';
+// }else if (Platform.isIOS){
+//   host = '10.1.81.182:8080';
+// }
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CartModelAdapter());
   Hive.registerAdapter(CategoriesAdapter());
-  // await Hive.initFlutter();
+  Hive.registerAdapter(SubCategoryAdapter());
+  await Hive.initFlutter();
   // await _openBox();
+// if(Use_Emulator){
+//   FirebaseFirestore.instance.settings = Settings(
+//     host: host,sslEnabled: false,
+//   );
+// }
+
   runApp(MyApp());
 }
 
@@ -69,6 +91,7 @@ class _MyAppState extends State<MyApp> {
               Hive.openBox<int>(tableBox),
               Hive.openBox<CartModel>(cartBox),
               Hive.openBox<Categories>(categoryBox),
+              Hive.openBox<SubCategory>(subCategoryBox),
             ]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {

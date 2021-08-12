@@ -10,13 +10,11 @@ class Categories {
  String categoryName;
 @HiveField(1)
  String imageName;
-@HiveField(2)
- List<SubCategory> subcatery;
+
 
  Categories({
    this.categoryName,
    this.imageName,
-   this.subcatery,
  }); 
 
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
@@ -18,7 +18,8 @@ class _HomePageState extends State<HomePage> {
   int selectedTable;
   int selectedCategoryIndex;
 
-  Categories selectedCategory;
+  String selectedCategory;
+  double totalPrice;
 
   List<String> categoriesList = [
     'Pizza',
@@ -48,16 +49,9 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  var categoryBoxxx;
-  getCategoryBox() async {
-    categoryBoxxx = await Hive.box(categoryBox);
-    setState(() {});
-  }
-
-  List<SubCategory> subList = [];
   @override
   void initState() {
-    getCategoryBox();
+  
     super.initState();
   }
 
@@ -73,14 +67,38 @@ class _HomePageState extends State<HomePage> {
                   image: AssetImage('assets/images/back.jpg'),
                   fit: BoxFit.cover)),
           child:
-             ValueListenableBuilder<Box<Categories>>(
-                        valueListenable:
-                            Hive.box<Categories>(categoryBox).listenable(),
-                        builder: (context, categBox, _) {
-                          var cate = categBox.values.toList().cast<Categories>();
-                          return 
-          
-           Row(
+              //  ValueListenableBuilder<Box<Categories>>(
+              //             valueListenable:
+              //                 Hive.box<Categories>(categoryBox).listenable(),
+              //             builder: (context, categBox, _) {
+              //               var cate = categBox.values.toList().cast<Categories>();
+              //               return
+ValueListenableBuilder<Box<CartModel>>(
+                                valueListenable:
+                                    Hive.box<CartModel>(cartBox).listenable(),
+                                builder: (context, cartBox, _) {
+                                  var allCart = cartBox.values.toList().cast<CartModel>();
+                                  List<CartModel> currentCart=[];
+                                  if(selectedTable!=null){
+                                    currentCart = allCart.where((element) =>(element.tableNo==selectedTable)).toList();
+                                     totalPrice = 0;
+                    try {
+                      currentCart.forEach((element) {
+                       
+                        // prices.add(double.parse((element.price).toString()));
+                        // quantites.add(element.quantity);
+                        totalPrice += (element.price * element.quantity);
+    
+                      });
+                    } catch (e) {
+                      print(e);
+
+                      totalPrice = 0;
+                    }
+                                  }
+                                  print(allCart.length);
+                                  return 
+              Row(
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 0.17,
@@ -231,15 +249,27 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                 Container(
-                              height: MediaQuery.of(context).size.height * 0.38,
-                              child: (categBox == null)
+                    Container(
+                        height: MediaQuery.of(context).size.height * 0.38,
+                        //         ValueListenableBuilder<Box<Categories>>(
+                        // valueListenable:
+                        //     Hive.box<Categories>(categoryBox).listenable(),
+                        // builder: (context, categBox, _) {
+                        //   var cate = categBox.values.toList().cast<Categories>();
+                        //   return
+                        child: ValueListenableBuilder<Box<Categories>>(
+                            valueListenable:
+                                Hive.box<Categories>(categoryBox).listenable(),
+                            builder: (context, categBox, _) {
+                              var cate =
+                                  categBox.values.toList().cast<Categories>();
+                              return (categBox == null)
                                   ? InkWell(
                                       onTap: () {
                                         Categories cat = Categories(
                                           categoryName: 'Pizza',
                                           imageName: '',
-                                          subcatery: [],
+                                          // subcatery: [],
                                         );
                                         categBox.add(cat);
                                       },
@@ -257,9 +287,9 @@ class _HomePageState extends State<HomePage> {
                                                 leading: Icon(Icons.add),
                                                 onTap: () {
                                                   Categories cat = Categories(
-                                                    categoryName: 'Pizza',
+                                                    categoryName: 'Burger',
                                                     imageName: '',
-                                                    subcatery: [],
+                                                    // subcatery: [],
                                                   );
                                                   categBox.add(cat);
                                                 },
@@ -267,12 +297,13 @@ class _HomePageState extends State<HomePage> {
                                             : InkWell(
                                                 onTap: () {
                                                   selectedCategoryIndex = index;
-                                                  selectedCategory =cate[index];
-                                                  subList =
-                                                      cate[index].subcatery;
+                                                  selectedCategory =
+                                                      cate[index].categoryName;
+                                                  // subList =
+                                                  //     cate[index].subcatery;
                                                   setState(() {});
                                                 },
-                                                onLongPress: (){
+                                                onLongPress: () {
                                                   categBox.deleteAt(index);
                                                 },
                                                 child: menuListTile(
@@ -281,8 +312,8 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               );
                                       },
-                                    )),
-                      
+                                    );
+                            })),
                     Container(
                       height: 40,
                       width: 120,
@@ -330,60 +361,36 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Flexible(
-                                  flex: 5,
-                                  fit: FlexFit.tight,
-                                  child: Container(
-                                    child: (selectedCategoryIndex == null)
-                                        ? Center(
-                                            child: Text(
-                                              'Category not Selected',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          )
-                                        : (subList == null)
-                                            ? InkWell(
-                                              onTap: (){
-                                                SubCategory sub = SubCategory(
-                                                  itemImage: "",
-                                                  itemName: "kbx",
-                                                  price: 600,
-                                                  quantity: 1,
-                                                );
-                                                selectedCategory.subcatery.add(sub);
-                                                categoryBoxxx.putAt(selectedCategoryIndex,selectedCategory );
-                                              },
-                                              child: Container(
-                                                  child: Center(
-                                                  child: Text(
-                                                    'Category is Empty\nClick To add SubCategory',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                )),
-                                            )
-                                            : (subList.isEmpty)
-                                                ? InkWell(
-                                                  onTap: (){
-                                                SubCategory sub = SubCategory(
-                                                  itemImage: "",
-                                                  itemName: "tfytf",
-                                                  price: 500,
-                                                  quantity: 1,
-                                                );
-                                                selectedCategory.subcatery.add(sub);
-                                                print(selectedCategory.subcatery.length);
-                                               categBox.putAt(selectedCategoryIndex,selectedCategory );
-                                              },
-                                                  child: Container(
-                                                      child: Center(
-                                                      child: Text(
-                                                        'Category is Empty\nClick To add SubCategory',
-                                                        style: TextStyle(
-                                                            color: Colors.white),
-                                                      ),
-                                                    )),
-                                                )
+                                    flex: 5,
+                                    fit: FlexFit.tight,
+                                    child: ValueListenableBuilder<
+                                            Box<SubCategory>>(
+                                        valueListenable: Hive.box<SubCategory>(
+                                                subCategoryBox)
+                                            .listenable(),
+                                        builder: (context, subCatBox, _) {
+                                          List<SubCategory> subCate = subCatBox
+                                              .values
+                                              .toList()
+                                              .cast<SubCategory>();
+                                          List<SubCategory> fileredSub = [];
+                                          if (selectedCategory != null) {
+                                            fileredSub = subCate
+                                                .where((element) => (element
+                                                    .categoryName
+                                                    .contains(
+                                                        selectedCategory)))
+                                                .toList();
+                                          }
+                                          return Container(
+                                            child: (selectedCategory == null)
+                                                ? Center(
+                                                    child: Text(
+                                                      'Category not Selected',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  )
                                                 : GridView.builder(
                                                     gridDelegate:
                                                         SliverGridDelegateWithFixedCrossAxisCount(
@@ -391,44 +398,61 @@ class _HomePageState extends State<HomePage> {
                                                       childAspectRatio: 0.90,
                                                     ),
                                                     itemCount:
-                                                        cate[selectedCategoryIndex].subcatery.length + 1,
+                                                        fileredSub.length + 1,
+                                                    // cate[selectedCategoryIndex].subcatery.length + 1,
                                                     itemBuilder: (_, index) {
-                                                      return (cate[selectedCategoryIndex].subcatery.length ==
+                                                      return (fileredSub
+                                                                  .length ==
                                                               index)
                                                           ? InkWell(
-                                                            onTap: () async {
-                                                             SubCategory sub = SubCategory(
-                                                  itemImage: "",
-                                                  itemName: "add in 1",
-                                                  price: 600,
-                                                  quantity: 1,
-                                                );
-                                                selectedCategory.subcatery.add(sub);
-                                                setState(() {
-                                                      });
-                                                print(selectedCategory.subcatery.length);
-                                                Categories udateCat = Categories(
-                                                  categoryName: selectedCategory.categoryName,
-                                                  imageName: selectedCategory.imageName,
-                                                  subcatery: selectedCategory.subcatery
-                                                );
-                                             await  categBox.putAt(selectedCategoryIndex,udateCat ).then((value) {
-                                               print('after result');
-                                               
-                                             }); 
+                                                              onTap: () async {
+                                                             
 
-                                                            },
-                                                            child: Container(
-                                                              color: Colors.green,
+                                                                SubCategory
+                                                                    sub =
+                                                                    SubCategory(
+                                                                  categoryName:
+                                                                      selectedCategory,
+                                                                  itemImage: "",
+                                                                  itemName:
+                                                                      "add in Burger",
+                                                                  price: 700,
+                                                                  quantity: 1,
+                                                                );
+                                                                subCatBox
+                                                                    .add(sub);
+                                                              },
+                                                              child: Container(
+                                                                color: Colors
+                                                                    .green,
                                                                 child: Icon(
                                                                     Icons.add),
                                                               ),
-                                                          )
+                                                            )
                                                           : InkWell(
-                                                            child: itemTile(cate[selectedCategoryIndex].subcatery[index]));
+                                                            onTap: (){
+                                                              CartModel mycart ;
+                                                              (selectedTable==null)?
+                                                              {
+                                                                print('error'),
+                                                            // Get.snackbar('Error', 'Select Table first',backgroundColor: Colors.redAccent,snackPosition:SnackPosition.BOTTOM),
+                                                              }:{
+ mycart =    CartModel(
+   img: fileredSub[index].itemImage,
+   item: fileredSub[index].itemName,
+   price: fileredSub[index].price,
+   quantity: fileredSub[index].quantity,
+   tableNo: selectedTable, ),
+                              cartBox.add(mycart),
+                                                              };
+                                                             
+                                                            },
+                                                              child: itemTile(
+                                                                  fileredSub[
+                                                                      index]));
                                                     }),
-                                  ),
-                                ),
+                                          );
+                                        })),
                               ],
                             ),
                           )),
@@ -437,220 +461,251 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                             // color: Colors.red,
                             margin: EdgeInsets.only(right: 20, top: 25),
-                            child: 
-                             ValueListenableBuilder<Box<CartModel>>(
-                                      valueListenable:
-                                          Hive.box<CartModel>(cartBox)
-                                              .listenable(),
-                                      builder: (context, box, _) {
-                                        return
-                            Column(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Container(
-                                    // color: Colors.teal,
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        'CheckOut',
-                                        style: TextStyle(fontSize: 25),
+                            child: Column(
+                                    children: [
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          // color: Colors.teal,
+                                          color: Colors.white,
+                                          child: Center(
+                                            child: Text(
+                                              'CheckOut',
+                                              style: TextStyle(fontSize: 25),
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Container(
-                                    color: Colors.purple,
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                          flex: 4,
-                                          fit: FlexFit.tight,
-                                          child: Container(
-                                            margin: EdgeInsets.only(left: 10),
-                                            child: Text(
-                                              'Name',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          color: Colors.purple,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                flex: 4,
+                                                fit: FlexFit.tight,
+                                                child: Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 10),
+                                                  child: Text(
+                                                    'Name',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              Flexible(
+                                                flex: 2,
+                                                fit: FlexFit.tight,
+                                                child: Container(
+                                                  child: Text(
+                                                    'Qty',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 2,
+                                                fit: FlexFit.tight,
+                                                child: Container(
+                                                  child: Text(
+                                                    'Price',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                fit: FlexFit.tight,
+                                                child: InkWell(
+                                                  onTap: ()=>cartBox.clear(),
+                                                  child: Container(
+                                                    child: Text(
+                                                      'Del',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Flexible(
-                                          flex: 2,
-                                          fit: FlexFit.tight,
-                                          child: Container(
-                                            child: Text(
-                                              'Qty',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Flexible(
-                                          flex: 2,
-                                          fit: FlexFit.tight,
-                                          child: Container(
-                                            child: Text(
-                                              'Price',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Flexible(
-                                          flex: 1,
-                                          fit: FlexFit.tight,
-                                          child: Container(
-                                            child: Text(
-                                              'Del',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 8,
-                                  fit: FlexFit.tight,
-                                  child: Container(
+                                      ),
+                                      Flexible(
+                                        flex: 8,
+                                        fit: FlexFit.tight,
+                                        child: Container(
                                           color: Colors.white,
                                           child: ListView.separated(
                                             separatorBuilder:
                                                 (context, index) => Divider(),
-                                            itemCount: 40,
+                                            itemCount: allCart.length,
                                             itemBuilder: (context, index) {
-                                              return Container(
-                                                  margin:
-                                                      EdgeInsets.only(left: 10),
-                                                  height: 40,
-                                                  child: Row(
-                                                    children: [
-                                                      Flexible(
-                                                        flex: 4,
-                                                        fit: FlexFit.tight,
-                                                        child: Container(
-                                                          // color: Colors.amber,
-                                                          child:
-                                                              Text('My Prod'),
-                                                        ),
+                                              print("length in list view ${allCart.length}");
+                                              print(allCart[index].tableNo);
+                                              return 
+                                            
+
+                                              (selectedTable==null)?
+                                              SizedBox():
+                                              
+                                              (allCart[index].tableNo == selectedTable)?
+                                              // Text(allCart[index].tableNo.toString()+allCart[index].price.toString()+allCart[index].quantity.toString()+allCart[index].item+allCart[index].img)
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 10),
+                                                height: 40,
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 4,
+                                                      fit: FlexFit.tight,
+                                                      child: Container(
+                                                        // color: Colors.amber,
+                                                        child:
+                                                            Text(allCart[index].item),
                                                       ),
-                                                      Flexible(
-                                                        flex: 2,
-                                                        fit: FlexFit.tight,
-                                                        child: Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  top: 5,
-                                                                  bottom: 5,
-                                                                  left: 5,
-                                                                  right: 5),
-                                                          decoration: BoxDecoration(
-                                                              border: Border.all(
-                                                                  width: 1,
-                                                                  color: Colors
-                                                                      .grey)),
-                                                          child: Row(
-                                                            children: [
-                                                              Flexible(
-                                                                flex: 1,
-                                                                fit: FlexFit
-                                                                    .tight,
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    _decrementQty();
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    height: double
-                                                                        .infinity,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Colors
-                                                                          .purple,
-                                                                    ),
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .remove,
-                                                                      size: 12,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Flexible(
-                                                                flex: 2,
-                                                                fit: FlexFit
-                                                                    .tight,
+                                                    ),
+                                                    Flexible(
+                                                      flex: 2,
+                                                      fit: FlexFit.tight,
+                                                      child: Container(
+                                                        margin:
+                                                            EdgeInsets.only(
+                                                                top: 5,
+                                                                bottom: 5,
+                                                                left: 5,
+                                                                right: 5),
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                width: 1,
+                                                                color: Colors
+                                                                    .grey)),
+                                                        child: Row(
+                                                          children: [
+                                                            Flexible(
+                                                              flex: 1,
+                                                              fit: FlexFit
+                                                                  .tight,
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  if(allCart[index].quantity>1){
+
+                                                                  
+                                                                  CartModel thisCart = CartModel(
+                                                                  img: allCart[index].img,
+                                                                  tableNo: allCart[index].tableNo,
+                                                                  item: allCart[index].item,
+                                                                  price: allCart[index].price,
+                                                                  quantity: allCart[index].quantity -1
+                                                                  );
+                                                                cartBox.putAt(index, thisCart);
+                                                                  }
+                                                                },
                                                                 child:
                                                                     Container(
+                                                                  height: double
+                                                                      .infinity,
                                                                   decoration:
                                                                       BoxDecoration(
                                                                     color: Colors
+                                                                        .purple,
+                                                                  ),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .remove,
+                                                                    size: 12,
+                                                                    color: Colors
                                                                         .white,
                                                                   ),
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                        '$count'),
-                                                                  ),
                                                                 ),
                                                               ),
-                                                              Flexible(
-                                                                flex: 1,
-                                                                fit: FlexFit
-                                                                    .tight,
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    _incrementQty();
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    height: double
-                                                                        .infinity,
+                                                            ),
+                                                            Flexible(
+                                                              flex: 2,
+                                                              fit: FlexFit
+                                                                  .tight,
+                                                              child:
+                                                                  Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                      allCart[index].quantity.toString()),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Flexible(
+                                                              flex: 1,
+                                                              fit: FlexFit
+                                                                  .tight,
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  CartModel thisCart = CartModel(
+                                                                  img: allCart[index].img,
+                                                                  tableNo: allCart[index].tableNo,
+                                                                  item: allCart[index].item,
+                                                                  price: allCart[index].price,
+                                                                  quantity: allCart[index].quantity +1
+                                                                  );
+                                                                cartBox.putAt(index, thisCart);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  height: double
+                                                                      .infinity,
+                                                                  color: Colors
+                                                                      .purple,
+                                                                  child: Icon(
+                                                                    Icons.add,
+                                                                    size: 12,
                                                                     color: Colors
-                                                                        .purple,
-                                                                    child: Icon(
-                                                                      Icons.add,
-                                                                      size: 12,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
+                                                                        .white,
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                      Flexible(
-                                                        flex: 2,
-                                                        fit: FlexFit.tight,
-                                                        child: Container(
-                                                          child: Text('20000'),
-                                                        ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 2,
+                                                      fit: FlexFit.tight,
+                                                      child: Container(
+                                                        child: Text(allCart[index].price.toString()),
                                                       ),
-                                                      Flexible(
-                                                        flex: 1,
-                                                        fit: FlexFit.tight,
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      fit: FlexFit.tight,
+                                                      child: InkWell(
+                                                        onTap: ()=>cartBox.deleteAt(index),
                                                         child: Container(
                                                           // color: Colors.amber,
 
@@ -660,308 +715,91 @@ class _HomePageState extends State<HomePage> {
                                                             size: 18,
                                                           ),
                                                         ),
-                                                      )
-                                                    ],
-                                                  ));
+                                                      ),
+                                                    )
+                                                  ],
+                                                ))
+                                                :SizedBox();
                                             },
                                           ),
                                         ),
-                                      // }),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Container(
-                                    color: Colors.red,
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                          flex: 2,
-                                          fit: FlexFit.tight,
-                                          child: Container(
-                                            color: Colors.purple,
-                                            child: Center(
-                                              child: Text(
-                                                'Total ',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Flexible(
-                                          flex: 3,
-                                          fit: FlexFit.tight,
-                                          child: Container(
-                                            color: Colors.purple,
-                                            child: Center(
-                                              child: Text(
-                                                '2309',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Container(
-                                    width: double.infinity,
-                                    margin: EdgeInsets.only(top: 5, bottom: 5),
-                                    color: Colors.white,
-                                    child: MaterialButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        'Pay',
-                                        style: TextStyle(fontSize: 18),
+                                        // }),
                                       ),
-                                    ),
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          color: Colors.red,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                flex: 2,
+                                                fit: FlexFit.tight,
+                                                child: Container(
+                                                  color: Colors.purple,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Total ',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 3,
+                                                fit: FlexFit.tight,
+                                                child: Container(
+                                                  color: Colors.purple,
+                                                  child: Center(
+                                                    child: Text(totalPrice.toString(),
+                                                      // allCart.fold("0.0", (previousValue, element) => element.price).toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(
+                                              top: 5, bottom: 5),
+                                          color: Colors.white,
+                                          child: MaterialButton(
+                                            onPressed: () {},
+                                            child: Text(
+                                              'Pay',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          width: double.infinity,
+                                          // color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Container(
-                                    width: double.infinity,
-                                    // color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            );}),
-                            // child: Column(
-                            //   children: [
-                            //     Container(
-                            //       height: 500,
-                            //       width: double.infinity,
-                            //       decoration: BoxDecoration(
-                            //         color: Color(0xFFF1F1F1),
-                            //         boxShadow: [
-                            //           BoxShadow(
-                            //               color: Colors.black54,
-                            //               blurRadius: 15.0,
-                            //               offset: Offset(0.0, 0.75))
-                            //         ],
-                            //         borderRadius:
-                            //             BorderRadius.all(Radius.circular(2)),
-                            //       ),
-                            //       child: Column(
-                            //         children: [
-                            //           Container(
-                            //             padding: EdgeInsets.all(15),
-                            //             child: Text(
-                            //               "Checkout",
-                            //               style: TextStyle(
-                            //                   color: Colors.black,
-                            //                   fontWeight: FontWeight.normal,
-                            //                   fontSize: 20),
-                            //             ),
-                            //           ),
-                            //           Container(
-                            //             padding: EdgeInsets.all(15),
-                            //             color: Color(0xFFD1D1D1),
-                            //             child: Row(
-                            //               children: [
-                            //                 Expanded(
-                            //                   child: Text(
-                            //                     "Name",
-                            //                     style: TextStyle(
-                            //                         color: Colors.black,
-                            //                         fontWeight:
-                            //                             FontWeight.normal,
-                            //                         fontSize: 14),
-                            //                   ),
-                            //                 ),
-                            //                 Spacer(),
-                            //                 Text(
-                            //                   "Qty",
-                            //                   style: TextStyle(
-                            //                       color: Colors.black,
-                            //                       fontWeight: FontWeight.normal,
-                            //                       fontSize: 14),
-                            //                 ),
-                            //                 SizedBox(
-                            //                   width: 40,
-                            //                 ),
-                            //                 Text(
-                            //                   "Price",
-                            //                   style: TextStyle(
-                            //                       color: Colors.black,
-                            //                       fontWeight: FontWeight.normal,
-                            //                       fontSize: 14),
-                            //                 ),
-                            //                 SizedBox(
-                            //                   width: 80,
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //           Expanded(
-                            //             child: ListView(
-                            //               // shrinkWrap: true,
-                            //               children: [
-                            //                 Container(
-                            //                   padding: EdgeInsets.only(
-                            //                       left: 15,
-                            //                       right: 15,
-                            //                       bottom: 5),
-                            //                   decoration: BoxDecoration(
-                            //                       border: Border(
-                            //                           bottom: BorderSide(
-                            //                               color: Colors.grey,
-                            //                               width: .5))),
-                            //                   child: ListView.builder(
-                            //                     itemCount: 5,
-                            //                     shrinkWrap: true,
-                            //                     itemBuilder: (context , index){
-                            //                       return Row(
-                            //                     children: [
-                            //                       Expanded(
-                            //                         child: Text(
-                            //                           'My Product',
-                            //                           style: TextStyle(
-                            //                               color: Colors.black,
-                            //                               fontWeight:
-                            //                                   FontWeight.normal,
-                            //                               fontSize: 14),
-                            //                         ),
-                            //                       ),
-                            //                       Spacer(),
-                            //                       Text(
-                            //                         '23',
-                            //                         style: TextStyle(
-                            //                             color: Colors.black,
-                            //                             fontWeight:
-                            //                                 FontWeight.normal,
-                            //                             fontSize: 14),
-                            //                       ),
-                            //                       SizedBox(
-                            //                         width: 50,
-                            //                       ),
-                            //                       Text(
-                            //                         '4309',
-                            //                         style: TextStyle(
-                            //                             color: Colors.black,
-                            //                             fontWeight:
-                            //                                 FontWeight.normal,
-                            //                             fontSize: 14),
-                            //                       ),
-                            //                       SizedBox(
-                            //                         width: 25,
-                            //                       ),
-                            //                       IconButton(
-                            //                           icon: Icon(Icons.delete),
-                            //                           onPressed: () {}),
-                            //                       SizedBox(
-                            //                         width: 5,
-                            //                       ),
-                            //                     ],
-                            //                   );
-                            //                     },
-                            //                   ),
-                            //                 ),
-                            //                 // ProductCartTile(
-                            //                 //   product: "Espresso",
-                            //                 //   qty: 1,
-                            //                 //   price: 4.35,
-                            //                 // ),
-                            //                 // ProductCartTile(
-                            //                 //   product: "Choco Frappe",
-                            //                 //   qty: 1,
-                            //                 //   price: 7.00,
-                            //                 // ),
-                            //                 // ProductCartTile(
-                            //                 //   product: "Caramel Frappe",
-                            //                 //   qty: 1,
-                            //                 //   price: 7.50,
-                            //                 // ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //           Spacer(),
-                            //           Container(
-                            //             padding: EdgeInsets.only(bottom: 25),
-                            //             child: Row(
-                            //               mainAxisAlignment:
-                            //                   MainAxisAlignment.spaceEvenly,
-                            //               children: [
-                            //                 Text(
-                            //                   "Total",
-                            //                   style: TextStyle(
-                            //                       color: Colors.green,
-                            //                       fontWeight: FontWeight.normal,
-                            //                       fontSize: 22),
-                            //                 ),
-                            //                 SizedBox(
-                            //                   width: 40,
-                            //                 ),
-                            //                 Row(
-                            //                   children: [
-                            //                     Container(
-                            //                       margin:
-                            //                           EdgeInsets.only(top: 4),
-                            //                       child: Image.network(
-                            //                         "https://www.libracoffee.io/img/icon-libra@3x.c0fc5777.png",
-                            //                         width: 25,
-                            //                       ),
-                            //                     ),
-                            //                     SizedBox(
-                            //                       width: 10,
-                            //                     ),
-                            //                     Text(
-                            //                       "18.85",
-                            //                       style: TextStyle(
-                            //                           color: Colors.green,
-                            //                           fontWeight:
-                            //                               FontWeight.normal,
-                            //                           fontSize: 22),
-                            //                     ),
-                            //                   ],
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //     SizedBox(
-                            //       height: 20,
-                            //     ),
-                            //     Container(
-                            //       height: 70,
-                            //       width: double.infinity,
-                            //       decoration: BoxDecoration(
-                            //         color: Colors.red,
-                            //         boxShadow: [
-                            //           BoxShadow(
-                            //               color: Colors.black54,
-                            //               blurRadius: 15.0,
-                            //               offset: Offset(0.0, 0.75))
-                            //         ],
-                            //         borderRadius:
-                            //             BorderRadius.all(Radius.circular(2)),
-                            //       ),
-                            //       child: Center(
-                            //           child: Text(
-                            //         "PAY (18.85)",
-                            //         style: TextStyle(
-                            //             color: Colors.white,
-                            //             fontWeight: FontWeight.w600,
-                            //             fontSize: 20),
-                            //       )),
-                            //     ),
-                            //   ],
-                            // ),
+                                // }),
                           )),
                     ],
                   ),
@@ -969,9 +807,11 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           );
-                        }),
+          }),
         ),
       ),
     );
   }
+
+  
 }
