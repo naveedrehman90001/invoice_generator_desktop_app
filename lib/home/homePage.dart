@@ -72,7 +72,15 @@ class _HomePageState extends State<HomePage> {
               image: DecorationImage(
                   image: AssetImage('assets/images/back.jpg'),
                   fit: BoxFit.cover)),
-          child: Row(
+          child:
+             ValueListenableBuilder<Box<Categories>>(
+                        valueListenable:
+                            Hive.box<Categories>(categoryBox).listenable(),
+                        builder: (context, categBox, _) {
+                          var cate = categBox.values.toList().cast<Categories>();
+                          return 
+          
+           Row(
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 0.17,
@@ -223,14 +231,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    ValueListenableBuilder<Box<Categories>>(
-                        valueListenable:
-                            Hive.box<Categories>(categoryBox).listenable(),
-                        builder: (context, box, _) {
-                          var cate = box.values.toList().cast<Categories>();
-                          return Container(
+                 Container(
                               height: MediaQuery.of(context).size.height * 0.38,
-                              child: (box == null)
+                              child: (categBox == null)
                                   ? InkWell(
                                       onTap: () {
                                         Categories cat = Categories(
@@ -238,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                                           imageName: '',
                                           subcatery: [],
                                         );
-                                        box.add(cat);
+                                        categBox.add(cat);
                                       },
                                       child: Container(
                                         child: Icon(Icons.add),
@@ -258,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                                     imageName: '',
                                                     subcatery: [],
                                                   );
-                                                  box.add(cat);
+                                                  categBox.add(cat);
                                                 },
                                               )
                                             : InkWell(
@@ -270,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                                                   setState(() {});
                                                 },
                                                 onLongPress: (){
-                                                  box.deleteAt(index);
+                                                  categBox.deleteAt(index);
                                                 },
                                                 child: menuListTile(
                                                   title:
@@ -278,8 +281,8 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               );
                                       },
-                                    ));
-                        }),
+                                    )),
+                      
                     Container(
                       height: 40,
                       width: 120,
@@ -370,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                                                 );
                                                 selectedCategory.subcatery.add(sub);
                                                 print(selectedCategory.subcatery.length);
-                                               categoryBoxxx.putAt(selectedCategoryIndex,selectedCategory );
+                                               categBox.putAt(selectedCategoryIndex,selectedCategory );
                                               },
                                                   child: Container(
                                                       child: Center(
@@ -388,17 +391,41 @@ class _HomePageState extends State<HomePage> {
                                                       childAspectRatio: 0.90,
                                                     ),
                                                     itemCount:
-                                                        subList.length + 1,
+                                                        cate[selectedCategoryIndex].subcatery.length + 1,
                                                     itemBuilder: (_, index) {
-                                                      return (subList.length ==
+                                                      return (cate[selectedCategoryIndex].subcatery.length ==
                                                               index)
-                                                          ? Container(
-                                                            color: Colors.green,
-                                                              child: Icon(
-                                                                  Icons.add),
-                                                            )
+                                                          ? InkWell(
+                                                            onTap: () async {
+                                                             SubCategory sub = SubCategory(
+                                                  itemImage: "",
+                                                  itemName: "add in 1",
+                                                  price: 600,
+                                                  quantity: 1,
+                                                );
+                                                selectedCategory.subcatery.add(sub);
+                                                setState(() {
+                                                      });
+                                                print(selectedCategory.subcatery.length);
+                                                Categories udateCat = Categories(
+                                                  categoryName: selectedCategory.categoryName,
+                                                  imageName: selectedCategory.imageName,
+                                                  subcatery: selectedCategory.subcatery
+                                                );
+                                             await  categBox.putAt(selectedCategoryIndex,udateCat ).then((value) {
+                                               print('after result');
+                                               
+                                             }); 
+
+                                                            },
+                                                            child: Container(
+                                                              color: Colors.green,
+                                                                child: Icon(
+                                                                    Icons.add),
+                                                              ),
+                                                          )
                                                           : InkWell(
-                                                            child: itemTile(subList[index]));
+                                                            child: itemTile(cate[selectedCategoryIndex].subcatery[index]));
                                                     }),
                                   ),
                                 ),
@@ -410,7 +437,14 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                             // color: Colors.red,
                             margin: EdgeInsets.only(right: 20, top: 25),
-                            child: Column(
+                            child: 
+                             ValueListenableBuilder<Box<CartModel>>(
+                                      valueListenable:
+                                          Hive.box<CartModel>(cartBox)
+                                              .listenable(),
+                                      builder: (context, box, _) {
+                                        return
+                            Column(
                               children: [
                                 Flexible(
                                   flex: 1,
@@ -497,12 +531,7 @@ class _HomePageState extends State<HomePage> {
                                 Flexible(
                                   flex: 8,
                                   fit: FlexFit.tight,
-                                  child: ValueListenableBuilder<Box<CartModel>>(
-                                      valueListenable:
-                                          Hive.box<CartModel>(cartBox)
-                                              .listenable(),
-                                      builder: (context, box, _) {
-                                        return Container(
+                                  child: Container(
                                           color: Colors.white,
                                           child: ListView.separated(
                                             separatorBuilder:
@@ -636,8 +665,8 @@ class _HomePageState extends State<HomePage> {
                                                   ));
                                             },
                                           ),
-                                        );
-                                      }),
+                                        ),
+                                      // }),
                                 ),
                                 Flexible(
                                   flex: 1,
@@ -709,7 +738,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ],
-                            ),
+                            );}),
                             // child: Column(
                             //   children: [
                             //     Container(
@@ -939,7 +968,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               )
             ],
-          ),
+          );
+                        }),
         ),
       ),
     );
