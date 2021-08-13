@@ -38,21 +38,6 @@ class _HomePageState extends State<HomePage> {
   int changeNum = 0;
   int changeNum2 = 0;
 
-  List<String> categoriesList = [
-    'Pizza',
-    'Burger',
-    'Chicken Pcs',
-    'Wings',
-    'Fries',
-    'Paratha Role',
-    'Chinese',
-    'Shawarma',
-    'Turkish',
-    'Pasta',
-    'Soup',
-    'Sansages',
-    'Drinks'
-  ];
 
   int count = 0;
 
@@ -231,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                                                       )
                                                     : InkWell(
                                                         onTap: () {
-                                                          selectedTable = index;
+                                                          selectedTable = index+1;
                                                           setState(() {});
                                                         },
                                                         child: Container(
@@ -254,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                                                                     ),
                                                           child: Center(
                                                             child: Text(
-                                                              '$index',
+                                                              '${index+1}',
                                                               style: TextStyle(
                                                                   color: selectedTable !=
                                                                           index
