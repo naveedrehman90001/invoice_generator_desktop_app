@@ -1,12 +1,27 @@
 
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
+import 'package:spicy_destop_invoic_app/examples/calendar.dart';
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 import 'package:spicy_destop_invoic_app/models/categories.dart';
 import 'package:spicy_destop_invoic_app/models/subCategory.dart';
 import 'package:spicy_destop_invoic_app/utils/data.dart';
 import 'package:spicy_destop_invoic_app/widgets/itemTile.dart';
 import 'package:spicy_destop_invoic_app/widgets/menuListTile.dart';
+import 'package:pdf/widgets.dart' as pw ;
+
+import '../data.dart';
+import 'myView.dart';
+
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,6 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   String selectedCategory;
   double totalPrice;
+  
 
   List<String> categoriesList = [
     'Pizza',
@@ -48,16 +64,26 @@ class _HomePageState extends State<HomePage> {
     count--;
     setState(() {});
   }
-
+var _data = CustomData();
   @override
   void initState() {
-  
+  _data = CustomData(name: 'value');
     super.initState();
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
+
+    //  final actions = <PdfPreviewAction>[
+    //   if (!kIsWeb)
+    //     PdfPreviewAction(
+    //       icon: const Icon(Icons.save),
+    //       onPressed: _saveAsFile,
+    //     )
+    // ];
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -781,7 +807,25 @@ ValueListenableBuilder<Box<CartModel>>(
                                               top: 5, bottom: 5),
                                           color: Colors.white,
                                           child: MaterialButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              if(selectedTable==null){
+
+                                              }else{
+                                                print("before print");
+                                              
+                                                // for(int i=0;i>cartBox.length;i++){
+                                                //   allCart[i].tableNo==selectedTable;
+                                                //   cartBox.deleteAt(i);
+                                                // }
+                                                if(currentCart.isEmpty){}else{
+                                            Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MyViewPrint(currentCart,totalPrice)),
+  );
+                                                }
+    
+                                              }
+                                            },
                                             child: Text(
                                               'Pay',
                                               style: TextStyle(fontSize: 18),
@@ -813,5 +857,8 @@ ValueListenableBuilder<Box<CartModel>>(
     );
   }
 
+
+
+   
   
 }
