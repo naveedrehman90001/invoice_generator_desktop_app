@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
@@ -24,6 +23,9 @@ class MyViewPrint extends StatefulWidget {
 }
 
 class _MyViewPrintState extends State<MyViewPrint> {
+
+
+  DateTime date = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,7 +56,7 @@ class _MyViewPrintState extends State<MyViewPrint> {
     final file = File(appDocPath + '/' + 'document.pdf');
     print('Save as file ${file.path} ...');
     await file.writeAsBytes(bytes);
-    await OpenFile.open(file.path);
+    // await OpenFile.open(file.path);
   }
   //  Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
   //   final pdf = Document();
@@ -229,6 +231,21 @@ class _MyViewPrintState extends State<MyViewPrint> {
                     pw.Text(totalPrice.toString())
                     ]),
                   ])),
+                  
+                  pw.SizedBox(height: 10),
+
+                  pw.Row(
+                    mainAxisAlignment : pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Container(
+                    child: pw.Text(date.toString() , style: pw.TextStyle(fontSize: 6)),
+                  ),
+
+                  pw.Container(
+                    child: pw.Text('Table :${allCart[0].tableNo}', style: pw.TextStyle(fontSize: 8)),
+                  ),
+                    ]
+                  ),
             ],
           );
         },

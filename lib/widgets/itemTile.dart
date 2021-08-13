@@ -24,8 +24,8 @@ Widget itemTile(SubCategory subCategory){
             child: Text(
               subCategory.itemName,
               style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
+                  color: Colors.purple,
+                  fontWeight: FontWeight.w700,
                   fontSize: 20),
             ),
           ),
@@ -40,17 +40,19 @@ Widget itemTile(SubCategory subCategory){
           //   ),
           // ),
 
-          Center(
-            child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(image: AssetImage('assets/images/espresso.51d468cc.jpg'))),
-                ),
-          ),
+          // Center(
+          //   child: Container(
+          //         width: 100,
+          //         height: 100,
+          //         decoration: BoxDecoration(
+          //             image: DecorationImage(image: AssetImage('assets/images/splogo.jpeg'))),
+          //       ),
+          // ),
 
-              Center(
-                child: Row(
+              // Center(
+              //   child:
+              Spacer(),
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Container(
@@ -63,16 +65,19 @@ Widget itemTile(SubCategory subCategory){
                     SizedBox(
                       width: 10,
                     ),
-                    Text('RS '+
-                      subCategory.price.toString(),
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 22),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 15),
+                      child: Text('RS '+
+                        subCategory.price.toString(),
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 22),
+                      ),
                     ),
                   ],
                 ),
-              ),
+              // ),
           // Expanded(
           //     child: Column(
           //   crossAxisAlignment: CrossAxisAlignment.center,

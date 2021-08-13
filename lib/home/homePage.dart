@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
@@ -216,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                                                       )
                                                     : InkWell(
                                                         onTap: () {
-                                                          selectedTable = index+1;
+                                                          selectedTable = index;
                                                           setState(() {});
                                                         },
                                                         child: Container(
@@ -239,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                                                                     ),
                                                           child: Center(
                                                             child: Text(
-                                                              '${index+1}',
+                                                              '${index}',
                                                               style: TextStyle(
                                                                   color: selectedTable !=
                                                                           index
@@ -444,7 +443,7 @@ class _HomePageState extends State<HomePage> {
                                                                   null)
                                                               ? InkWell(
                                                                   onTap: () {
-                                                                    // subCatBox.clear();
+                                                                    subCatBox.clear();
                                                                   },
                                                                   child: Center(
                                                                     child: Text(
@@ -608,8 +607,8 @@ class _HomePageState extends State<HomePage> {
                                                     flex: 1,
                                                     fit: FlexFit.tight,
                                                     child: InkWell(
-                                                      onTap: () =>
-                                                          cartBox.clear(),
+                                                      // onTap: () =>
+                                                      //     cartBox.clear(),
                                                       child: Container(
                                                         child: Text(
                                                           'Del',
