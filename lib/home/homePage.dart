@@ -840,9 +840,10 @@ class _HomePageState extends State<HomePage> {
                                                                 MyViewPrint(
                                                                     currentCart,
                                                                     totalPrice,
-                                                                    (){
+                                                                    () async {
                                                                       for(int i=0;i<allCart.length;i++){
-                                                                        (allCart[i].tableNo ==selectedTable)?cartBox.deleteAt(i):null;
+                                                                        (allCart[i].tableNo ==selectedTable)?await cartBox.deleteAt(i):null;
+                                                                        
                                                                       }
                                                                       Navigator.of(context).pop();
 
