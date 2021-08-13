@@ -8,6 +8,8 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 import 'package:spicy_destop_invoic_app/models/categories.dart';
 import 'package:spicy_destop_invoic_app/models/subCategory.dart';
@@ -141,19 +143,9 @@ class _HomePageState extends State<HomePage> {
                                     bottom: BorderSide(color: Colors.grey),
                                   ),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Center(
-                                      child: Image.network(
-                                        "https://www.libracoffee.io/img/app-logo.18b670b8.jpg",
-                                        width: 150,
-                                      ),
-                                    ),
-                                  ],
+                                child: Image.asset(
+                                  'assets/images/splogo.jpeg',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               Container(
@@ -620,10 +612,10 @@ class _HomePageState extends State<HomePage> {
                                             fit: FlexFit.tight,
                                             child: Container(
                                               color: Colors.white,
-                                              child: ListView.separated(
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        Divider(),
+                                              child: ListView.builder(
+                                                // separatorBuilder:
+                                                //     (context, index) =>
+                                                //         Divider(),
                                                 itemCount: allCart.length,
                                                 itemBuilder: (context, index) {
                                                   print(

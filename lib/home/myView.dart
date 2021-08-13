@@ -9,7 +9,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 
 class MyViewPrint extends StatefulWidget {
-
   List<CartModel> allCart;
   double totalPrice;
 
@@ -37,13 +36,9 @@ class _MyViewPrintState extends State<MyViewPrint> {
         // onError: Navigator.of(context).pop,
         // _showPrintedToast,
         // onShared: _showSharedToast,
-
-        ),
+      ),
     );
   }
-
-  
-  
 
   Future<void> _saveAsFile(
     BuildContext context,
@@ -59,10 +54,37 @@ class _MyViewPrintState extends State<MyViewPrint> {
     await file.writeAsBytes(bytes);
     await OpenFile.open(file.path);
   }
+  //  Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
+  //   final pdf = Document();
+  //   final font = await PdfGoogleFonts.nunitoExtraLight();
+  //   print("print called");
 
-  Future<Uint8List> 
-  _generatePdf(PdfPageFormat format,List<CartModel> allCart,double totalPrice) async {
-    final pdf = pw.Document();//version: PdfVersion.pdf_1_5, compress: true
+  //   pdf.addPage(
+  //   Page(
+  //       pageFormat: format,
+  //       build: (context) {
+  //         return Column(
+  //           children: [
+  //             SizedBox(
+  //               width: double.infinity,
+  //               child: FittedBox(
+  //                 child: Text(title, style: TextStyle(font: font)),
+  //               ),
+  //             ),
+  //             SizedBox(height: 20),
+  //             Flexible(child: FlutterLogo())
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+
+  //   return pdf.save();
+  // }
+
+  Future<Uint8List> _generatePdf(
+      PdfPageFormat format, List<CartModel> allCart, double totalPrice) async {
+    final pdf = pw.Document(); //version: PdfVersion.pdf_1_5, compress: true
     // final font = await PdfGoogleFonts.nunitoExtraLight();
 
     pdf.addPage(
@@ -71,79 +93,140 @@ class _MyViewPrintState extends State<MyViewPrint> {
         build: (context) {
           return pw.Column(
             children: [
+              pw.Container(
+                width: double.infinity,
+                child: pw.Center(
+                  child: pw.Text('Spice Affair',
+                      style: pw.TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: pw.FontWeight.normal,
+                      )),
+                ),
+              ),
               pw.SizedBox(
                 width: double.infinity,
                 child: pw.FittedBox(
-                  child: pw.Text("Rehman plaza near ghazi Khan pump gate 3 main road KDA Kohat", style: pw.TextStyle(fontSize: 20 )),
+                  child: pw.Text(
+                      "Rehman plaza near ghazi Khan \npump gate 3 main road KDA Kohat",
+                      style: pw.TextStyle(fontSize: 13)),
                 ),
               ),
-              pw.SizedBox(height: 20),
-              // pw.Flexible(child: pw.FlutterLogo())
-             pw.Container(
-                                          // color:Colors.white,
-                                          child: pw.ListView.separated(
-                                            separatorBuilder:
-                                                (context, index) => pw.Divider(),
-                                            itemCount: allCart.length,
-                                            itemBuilder: (context, index) {
-                                            
-                                              return 
-                                            
+              pw.SizedBox(height: 5),
+              pw.SizedBox(
+                width: double.infinity,
+                child: pw.FittedBox(
+                  child: pw.Text("P.No # 03179866429 , 03323792099",
+                      style: pw.TextStyle(fontSize: 13)),
+                ),
+              ),
 
-                                              
-                                              
-                                              // Text(allCart[index].tableNo.toString()+allCart[index].price.toString()+allCart[index].quantity.toString()+allCart[index].item+allCart[index].img)
-                                              pw.Container(
-                                                margin:pw.EdgeInsets.only(left: 10),
-                                                height: 40,
-                                                child: pw.Row(
-                                                  children: [
-                                                   pw. Flexible(
-                                                      flex: 4,
-                                                      fit: pw.FlexFit.tight,
-                                                      child: pw.Container(
-                                                        // color: Colors.amber,
-                                                        child:
-                                                            pw.Text(allCart[index].item),
-                                                      ),
-                                                    ),
-                                                   pw. Flexible(
-                                                      flex: 2,
-                                                      fit: pw.FlexFit.tight,
-                                                      child: pw.Container(
-                                                        margin:
-                                                            pw.EdgeInsets.only(
-                                                                top: 5,
-                                                                bottom: 5,
-                                                                left: 5,
-                                                                right: 5),
-                                                        decoration:pw. BoxDecoration(
-                                                            border:pw. Border.all(
-                                                                width: 1,
-                                                                )),
-                                                        child:pw. Text(allCart[index].quantity.toString()),
-                                                      ),
-                                                    ),
-                                                    pw.Flexible(
-                                                      flex: 2,
-                                                      fit: pw.FlexFit.tight,
-                                                      child:pw. Container(
-                                                        child:pw. Text(allCart[index].price.toString()),
-                                                      ),
-                                                    ),
-                                                   
-                                                  ],
-                                                ));
-                                              
-                                            },
-                                          ),
-                                        ),
-            pw.Row(
-              children: [
-               pw. Text('Total'),
-               pw. Text(totalPrice.toString())
-              ]
-            ),
+              pw.Text('---------------------------------------------------'),
+
+              pw.Container(
+                  margin: pw.EdgeInsets.only(left: 10),
+                  child: pw.Row(
+                    children: [
+                      pw.Flexible(
+                        flex: 4,
+                        fit: pw.FlexFit.tight,
+                        child: pw.Container(
+                          // color: Colors.amber,
+                          child: pw.Text('Items'),
+                        ),
+                      ),
+                      pw.Flexible(
+                        flex: 2,
+                        fit: pw.FlexFit.tight,
+                        child: pw.Container(
+                          // margin: pw.EdgeInsets.only(
+                          //     top: 5, bottom: 5, left: 5, right: 5),
+                          // decoration: pw.BoxDecoration(
+                          //     border: pw.Border.all(
+                          //   width: 1,
+                          // )),
+                          child: pw.Text("Qty"),
+                        ),
+                      ),
+                      pw.Flexible(
+                        flex: 2,
+                        fit: pw.FlexFit.tight,
+                        child: pw.Container(
+                          child: pw.Text('Price'),
+                        ),
+                      ),
+                    ],
+                  )),
+
+              pw.Text('---------------------------------------------------'),
+              // pw.Flexible(child: pw.FlutterLogo())
+              pw.Container(
+                // color:Colors.white,
+                child: pw.ListView.builder(
+                  // separatorBuilder: (context, index) => pw.Divider(
+                  //   thi
+                  // ),
+                  itemCount: allCart.length,
+                  itemBuilder: (context, index) {
+                    return
+
+                        // Text(allCart[index].tableNo.toString()+allCart[index].price.toString()+allCart[index].quantity.toString()+allCart[index].item+allCart[index].img)
+                        pw.Container(
+                            margin: pw.EdgeInsets.only(left: 10),
+                            height: 40,
+                            child: pw.Row(
+                              children: [
+                                pw.Flexible(
+                                  flex: 4,
+                                  fit: pw.FlexFit.tight,
+                                  child: pw.Container(
+                                    // color: Colors.amber,
+                                    child: pw.Text(allCart[index].item , style: pw.TextStyle(fontSize: 13)),
+                                  ),
+                                ),
+                                pw.Flexible(
+                                  flex: 2,
+                                  fit: pw.FlexFit.tight,
+                                  child: pw.Container(
+                                    // margin: pw.EdgeInsets.only(
+                                    //     top: 5, bottom: 5, left: 5, right: 5),
+                                    // decoration: pw.BoxDecoration(
+                                    //     border: pw.Border.all(
+                                    //   width: 1,
+                                    // )),
+                                    child: pw.Text(
+                                        " x ${allCart[index].quantity}", style: pw.TextStyle(fontSize: 13)),
+                                  ),
+                                ),
+                                pw.Flexible(
+                                  flex: 2,
+                                  fit: pw.FlexFit.tight,
+                                  child: pw.Container(
+                                    child: pw.Text(
+                                        allCart[index].price.toString(), style: pw.TextStyle(fontSize: 13)),
+                                  ),
+                                ),
+                              ],
+                            ));
+                  },
+                ),
+              ),
+
+              pw.SizedBox(height: 10.0),
+
+              pw.Text('---------------------------------------------------'),
+
+              pw.Container(
+                  alignment: pw.Alignment.topRight,
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                    
+                    pw.Container(child: pw.Text('          ')),
+                    pw.Row(children: [
+                      pw.Text('Total : '),
+                    pw.Text(totalPrice.toString())
+                    ]),
+                  ])),
             ],
           );
         },
@@ -153,7 +236,6 @@ class _MyViewPrintState extends State<MyViewPrint> {
     return pdf.save();
   }
 
-  
   void _showPrintedToast(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -169,6 +251,4 @@ class _MyViewPrintState extends State<MyViewPrint> {
       ),
     );
   }
-
-
 }
