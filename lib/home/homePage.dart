@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   String selectedCategory;
   double totalPrice;
+  int changeNum = 0;
+  int changeNum2 = 0;
 
   List<String> categoriesList = [
     'Pizza',
@@ -279,10 +281,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
-                              
                               Container(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.38,
+                                      MediaQuery.of(context).size.height * 0.40,
                                   child: ValueListenableBuilder<
                                           Box<Categories>>(
                                       valueListenable:
@@ -295,8 +296,6 @@ class _HomePageState extends State<HomePage> {
                                         return (categBox == null)
                                             ? InkWell(
                                                 onTap: () {
-
-   
                                                   // Categories cat = Categories(
                                                   //   categoryName: 'Pizza',
                                                   //   imageName: '',
@@ -313,17 +312,41 @@ class _HomePageState extends State<HomePage> {
                                                 itemBuilder: (context, index) {
                                                   return (cate.length == index)
                                                       ? ListTile(
-                                                          leading:
-                                                              Icon(Icons.add),
+                                                          leading: Container(
+                                                              height: 40,
+                                                              width: 40,
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .purple,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5.0)),
+                                                              child: Icon(
+                                                                Icons.add,
+                                                                color: Colors
+                                                                    .white,
+                                                              )),
                                                           onTap: () {
-
-                                                          //  categoryJson.forEach((element) async { 
-                                                          //  Categories categories =   Categories.fromJson(element);
-                                                          //  await  categBox.add(categories);
-                                                          //  });
-                                                          _showMyDialogAdd(cate,categBox);
-                                                           
-                                                            
+                                                            _showMyDialogAdd(
+                                                                cate, categBox);
+                                                          },
+                                                          onLongPress: () {
+                                                            changeNum++;
+                                                            setState(() {});
+                                                            if (changeNum ==
+                                                                2) {
+                                                              categoryJson.forEach(
+                                                                  (element) async {
+                                                                Categories
+                                                                    categories =
+                                                                    Categories
+                                                                        .fromJson(
+                                                                            element);
+                                                                await categBox.add(
+                                                                    categories);
+                                                              });
+                                                            }
                                                           },
                                                         )
                                                       : InkWell(
@@ -342,12 +365,12 @@ class _HomePageState extends State<HomePage> {
                                                                 index);
                                                           },
                                                           child: menuListTile(
-                                                            title: cate[index]
-                                                                .categoryName,
-                                                                myIndex: index,
-                                                                selectedIndex: selectedCategoryIndex??-1
-
-                                                          ),
+                                                              title: cate[index]
+                                                                  .categoryName,
+                                                              myIndex: index,
+                                                              selectedIndex:
+                                                                  selectedCategoryIndex ??
+                                                                      -1),
                                                         );
                                                 },
                                               );
@@ -435,18 +458,18 @@ class _HomePageState extends State<HomePage> {
                                                           child: (selectedCategory ==
                                                                   null)
                                                               ? InkWell(
-                                                                onTap: (){
-                                                                  subCatBox.clear();
-                                                                },
-                                                                child: Center(
+                                                                  onTap: () {
+                                                                    // subCatBox.clear();
+                                                                  },
+                                                                  child: Center(
                                                                     child: Text(
                                                                       'Category not Selected',
                                                                       style: TextStyle(
-                                                                          color: Colors
-                                                                              .white),
+                                                                          color:
+                                                                              Colors.white),
                                                                     ),
                                                                   ),
-                                                              )
+                                                                )
                                                               : GridView
                                                                   .builder(
                                                                       gridDelegate:
@@ -466,17 +489,31 @@ class _HomePageState extends State<HomePage> {
                                                                                 index)
                                                                             ? InkWell(
                                                                                 onTap: () async {
-                                              //  _showMyDialogAddSubCategory(fileredSub, subCatBox);
-                                              subJson.forEach((element) async { 
-                                                SubCategory subM = SubCategory.fromJson(element);
-                                                await subCatBox.add(subM);
+                                                                                  //  _showMyDialogAddSubCategory(fileredSub, subCatBox);
 
-                                              });
-                                                                                  
+                                                                                  _showMyDialogAddSubCategory(fileredSub, subCatBox);
+                                                                                },
+                                                                                onLongPress: () {
+                                                                                  changeNum2++;
+                                                                                  setState(() {});
+                                                                                  if (changeNum2 == 2) {
+                                                                                    subJson.forEach((element) async {
+                                                                                      SubCategory subM = SubCategory.fromJson(element);
+                                                                                      await subCatBox.add(subM);
+                                                                                    });
+                                                                                  }
                                                                                 },
                                                                                 child: Container(
-                                                                                  color: Colors.green,
-                                                                                  child: Icon(Icons.add),
+                                                                                  // color: Colors.green,
+                                                                                  margin: EdgeInsets.all(10),
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.purple,
+                                                                                    borderRadius: BorderRadius.circular(5.0),
+                                                                                  ),
+                                                                                  child: Icon(
+                                                                                    Icons.add,
+                                                                                    color: Colors.white,
+                                                                                  ),
                                                                                 ),
                                                                               )
                                                                             : InkWell(
@@ -495,8 +532,7 @@ class _HomePageState extends State<HomePage> {
                                                                                             quantity: fileredSub[index].quantity,
                                                                                             tableNo: selectedTable,
                                                                                           ),
-                                                                                         (currentCart.where((element) =>(element.item==mycart.item)).toList().isEmpty)?cartBox.add(mycart):_showMyDialogError('Add quantity in Cart'),//_showPrintedToast(context)
-                                                                                         
+                                                                                          (currentCart.where((element) => (element.item == mycart.item)).toList().isEmpty) ? cartBox.add(mycart) : _showMyDialogError('Add quantity in Cart'), //_showPrintedToast(context)
                                                                                         };
                                                                                 },
                                                                                 child: itemTile(fileredSub[index]));
@@ -846,29 +882,38 @@ class _HomePageState extends State<HomePage> {
                                                     // }
                                                     if (currentCart.isEmpty) {
                                                     } else {
-
-                                                    await  Navigator.push(
+                                                      await Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                MyViewPrint(
-                                                                    currentCart,
-                                                                    totalPrice,
-                                                                    () async {
-                                                                      for(int i=0;i<allCart.length;i++){
-                                                                        (allCart[i].tableNo ==selectedTable)?await cartBox.deleteAt(i):null;
-
-                                                                      }
-                                                                      Navigator.of(context).pop();
-
-                                                                    },
+                                                            builder:
+                                                                (context) =>
+                                                                    MyViewPrint(
+                                                                      currentCart,
+                                                                      totalPrice,
+                                                                      () async {
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < allCart.length;
+                                                                            i++) {
+                                                                          (allCart[i].tableNo == selectedTable)
+                                                                              ? await cartBox.deleteAt(i)
+                                                                              : null;
+                                                                        }
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      },
                                                                     )),
                                                       ).then((value) {
-                                                         for(int i=0;i<=cartBox.length;i++){
-                                                            (allCart[i].tableNo == selectedTable)?cartBox.deleteAt(i):null;
-                                                                      }
+                                                        for (int i = 0;
+                                                            i <= cartBox.length;
+                                                            i++) {
+                                                          (allCart[i].tableNo ==
+                                                                  selectedTable)
+                                                              ? cartBox
+                                                                  .deleteAt(i)
+                                                              : null;
+                                                        }
                                                       });
-                                                     
                                                     }
                                                   }
                                                 },
@@ -910,10 +955,10 @@ class _HomePageState extends State<HomePage> {
       // barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  Text('Error'),
+          title: Text('Error'),
           content: SingleChildScrollView(
             child: ListBody(
-              children:  <Widget>[
+              children: <Widget>[
                 Text(error),
                 // Text('Would you like to approve of this message?'),
               ],
@@ -932,49 +977,46 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showPrintedToast(BuildContext context,String title) {
+  void _showPrintedToast(BuildContext context, String title) {
     ScaffoldMessenger.of(context).showSnackBar(
-       SnackBar(
+      SnackBar(
         content: Text(title),
       ),
     );
   }
 
-   _showMyDialogAdd(List<Categories> myList,Box myBox) async {
-         TextEditingController controller = TextEditingController();
+  _showMyDialogAdd(List<Categories> myList, Box myBox) async {
+    TextEditingController controller = TextEditingController();
     return showDialog<void>(
       context: context,
       // barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  Text('Add Category'),
+          title: Text('Add Category'),
           content: SingleChildScrollView(
             child: ListBody(
-              children:  <Widget>[
+              children: <Widget>[
                 TextFormField(
-decoration: InputDecoration(
-  fillColor: Colors.white,
-  filled: true,
-  hintText: 'Category Name',
-  hintStyle:TextStyle(fontSize: 15),//TextStyles.normalFontText.copyWith(fontSize: 15),
-  contentPadding: EdgeInsets.symmetric(horizontal:10),
-  border: InputBorder.none,
-     enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-    focusedBorder:  OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-  
-
-  
-),
-style: TextStyle(fontSize: 20),
-controller: controller,
-
-
- keyboardType: TextInputType.name,
-)
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Category Name',
+                    hintStyle: TextStyle(
+                        fontSize:
+                            15), //TextStyles.normalFontText.copyWith(fontSize: 15),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    border: InputBorder.none,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 20),
+                  controller: controller,
+                  keyboardType: TextInputType.name,
+                )
                 // Text('Would you like to approve of this message?'),
               ],
             ),
@@ -984,22 +1026,30 @@ controller: controller,
               child: const Text('Add'),
               onPressed: () {
                 Categories cat;
-                controller.text.isEmpty?
-                _showPrintedToast(context,"Category cannot be empty"):{
-                 cat =
-                     Categories(
-                        categoryName:
-                           controller.text,
-                        imageName: '', ),
-                           myList.where((element) => element.categoryName==cat.categoryName).toList().isEmpty?{myBox.add(cat),Navigator.of(context).pop()}:_showMyDialogError("${cat.categoryName} already exist"),
-                // Navigator.of(context).pop();
-              };},
+                controller.text.isEmpty
+                    ? _showPrintedToast(context, "Category cannot be empty")
+                    : {
+                        cat = Categories(
+                          categoryName: controller.text,
+                          imageName: '',
+                        ),
+                        myList
+                                .where((element) =>
+                                    element.categoryName == cat.categoryName)
+                                .toList()
+                                .isEmpty
+                            ? {myBox.add(cat), Navigator.of(context).pop()}
+                            : _showMyDialogError(
+                                "${cat.categoryName} already exist"),
+                        // Navigator.of(context).pop();
+                      };
+              },
             ),
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
-               },
+              },
             ),
           ],
         );
@@ -1007,73 +1057,67 @@ controller: controller,
     );
   }
 
-
-   _showMyDialogAddSubCategory(List<SubCategory> myList,Box myBox) async {
-         TextEditingController controller = TextEditingController();
-         TextEditingController priceController = TextEditingController();
+  _showMyDialogAddSubCategory(List<SubCategory> myList, Box myBox) async {
+    TextEditingController controller = TextEditingController();
+    TextEditingController priceController = TextEditingController();
     return showDialog<void>(
       context: context,
       // barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  Text('Add SubCategory'),
+          title: Text('Add SubCategory'),
           content: SingleChildScrollView(
             child: ListBody(
-              children:  <Widget>[
+              children: <Widget>[
                 TextFormField(
-decoration: InputDecoration(
-  fillColor: Colors.white,
-  filled: true,
-  hintText: ' Name',
-  hintStyle:TextStyle(fontSize: 15),//TextStyles.normalFontText.copyWith(fontSize: 15),
-  contentPadding: EdgeInsets.symmetric(horizontal:10),
-  border: InputBorder.none,
-     enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-    focusedBorder:  OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-  
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: ' Name',
+                    hintStyle: TextStyle(
+                        fontSize:
+                            15), //TextStyles.normalFontText.copyWith(fontSize: 15),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    border: InputBorder.none,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 20),
+                  controller: controller,
+                  keyboardType: TextInputType.name,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
 
-  
-),
-style: TextStyle(fontSize: 20),
-controller: controller,
-
-
- keyboardType: TextInputType.name,
-),    
-SizedBox(height: 10,),        
-
-  TextFormField(
-decoration: InputDecoration(
-  fillColor: Colors.white,
-  filled: true,
-  hintText: 'Price',
-  hintStyle:TextStyle(fontSize: 15),//TextStyles.normalFontText.copyWith(fontSize: 15),
-  contentPadding: EdgeInsets.symmetric(horizontal:10),
-  border: InputBorder.none,
-     enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-    focusedBorder:  OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-  
-
-  
-),
-
-style: TextStyle(fontSize: 20),
-controller: priceController,
-
-
-  keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-),
+                TextFormField(
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Price',
+                    hintStyle: TextStyle(
+                        fontSize:
+                            15), //TextStyles.normalFontText.copyWith(fontSize: 15),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    border: InputBorder.none,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 20),
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                ),
                 // Text('Would you like to approve of this message?'),
               ],
             ),
@@ -1082,34 +1126,39 @@ controller: priceController,
             TextButton(
               child: const Text('Add'),
               onPressed: () {
-               SubCategory sub;
-                controller.text.isEmpty?
-                _showPrintedToast(context,"Name cannot be empty"):
-                priceController.text.isEmpty?
-                _showPrintedToast(context,"Price cannot be empty")
-                :{
-                                                   sub  = SubCategory(
-                                                                                    categoryName: selectedCategory,
-                                                                                    itemImage: "",
-                                                                                    itemName: controller.text,
-                                                                                    price: double.tryParse(priceController.text),
-                                                                                    quantity: 1,
-                                                                                  ),
-                                                                        (myList.where((element) =>element.itemName==sub.itemName).toList().isEmpty)?{myBox.add(sub),Navigator.of(context).pop()}:_showMyDialogError("${sub.itemName} already Exist"),
-              };},
+                SubCategory sub;
+                controller.text.isEmpty
+                    ? _showPrintedToast(context, "Name cannot be empty")
+                    : priceController.text.isEmpty
+                        ? _showPrintedToast(context, "Price cannot be empty")
+                        : {
+                            sub = SubCategory(
+                              categoryName: selectedCategory,
+                              itemImage: "",
+                              itemName: controller.text,
+                              price: double.tryParse(priceController.text),
+                              quantity: 1,
+                            ),
+                            (myList
+                                    .where((element) =>
+                                        element.itemName == sub.itemName)
+                                    .toList()
+                                    .isEmpty)
+                                ? {myBox.add(sub), Navigator.of(context).pop()}
+                                : _showMyDialogError(
+                                    "${sub.itemName} already Exist"),
+                          };
+              },
             ),
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
-               },
+              },
             ),
           ],
         );
       },
     );
   }
-
-
-
 }
