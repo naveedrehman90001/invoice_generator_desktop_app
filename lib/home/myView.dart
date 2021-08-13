@@ -11,10 +11,12 @@ import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 class MyViewPrint extends StatefulWidget {
   List<CartModel> allCart;
   double totalPrice;
+  Function handler;
 
   MyViewPrint(
     this.allCart,
     this.totalPrice,
+    this.handler,
   );
 
   @override

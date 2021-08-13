@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +14,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 import 'package:spicy_destop_invoic_app/models/categories.dart';
 import 'package:spicy_destop_invoic_app/models/subCategory.dart';
+import 'package:spicy_destop_invoic_app/utils/categoryjson.dart';
 import 'package:spicy_destop_invoic_app/utils/data.dart';
 import 'package:spicy_destop_invoic_app/widgets/itemTile.dart';
 import 'package:spicy_destop_invoic_app/widgets/menuListTile.dart';
@@ -280,12 +282,6 @@ class _HomePageState extends State<HomePage> {
                               Container(
                                   height:
                                       MediaQuery.of(context).size.height * 0.38,
-                                  //         ValueListenableBuilder<Box<Categories>>(
-                                  // valueListenable:
-                                  //     Hive.box<Categories>(categoryBox).listenable(),
-                                  // builder: (context, categBox, _) {
-                                  //   var cate = categBox.values.toList().cast<Categories>();
-                                  //   return
                                   child: ValueListenableBuilder<
                                           Box<Categories>>(
                                       valueListenable:
@@ -298,12 +294,14 @@ class _HomePageState extends State<HomePage> {
                                         return (categBox == null)
                                             ? InkWell(
                                                 onTap: () {
-                                                  Categories cat = Categories(
-                                                    categoryName: 'Pizza',
-                                                    imageName: '',
-                                                    // subcatery: [],
-                                                  );
-                                                  categBox.add(cat);
+
+   
+                                                  // Categories cat = Categories(
+                                                  //   categoryName: 'Pizza',
+                                                  //   imageName: '',
+                                                  //   // subcatery: [],
+                                                  // );
+                                                  // categBox.add(cat);
                                                 },
                                                 child: Container(
                                                   child: Icon(Icons.add),
@@ -311,22 +309,16 @@ class _HomePageState extends State<HomePage> {
                                               )
                                             : ListView.builder(
                                                 itemCount: cate.length + 1,
-                                                // physics: NeverScrollableScrollPhysics(),
-                                                // shrinkWrap: true,
                                                 itemBuilder: (context, index) {
                                                   return (cate.length == index)
                                                       ? ListTile(
                                                           leading:
                                                               Icon(Icons.add),
                                                           onTap: () {
-                                                            Categories cat =
-                                                                Categories(
-                                                              categoryName:
-                                                                  'Burger',
-                                                              imageName: '',
-                                                              
-                                                            );
-                                                            cate.where((element) => element.categoryName==cat.categoryName).toList().isEmpty?categBox.add(cat):_showMyDialogError("${cat.categoryName} already exist");
+
+   
+                                                          _showMyDialogAdd(cate,categBox);
+                                                           
                                                             
                                                           },
                                                         )
@@ -465,14 +457,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 index)
                                                                             ? InkWell(
                                                                                 onTap: () async {
-                                                                                  SubCategory sub = SubCategory(
-                                                                                    categoryName: selectedCategory,
-                                                                                    itemImage: "",
-                                                                                    itemName: "add in Burger",
-                                                                                    price: 700,
-                                                                                    quantity: 1,
-                                                                                  );
-                                                                        (fileredSub.where((element) =>element.itemImage==sub.itemImage).toList().isEmpty)?subCatBox.add(sub):_showMyDialogError("${sub.itemName} already Exist");
+                                               _showMyDialogAddSubCategory(fileredSub, subCatBox);
                                                                                   
                                                                                 },
                                                                                 child: Container(
@@ -836,7 +821,7 @@ class _HomePageState extends State<HomePage> {
                                                   top: 5, bottom: 5),
                                               color: Colors.white,
                                               child: MaterialButton(
-                                                onPressed: () {
+                                                onPressed: () async {
                                                   if (selectedTable == null) {
                                                   } else {
                                                     print("before print");
@@ -847,14 +832,28 @@ class _HomePageState extends State<HomePage> {
                                                     // }
                                                     if (currentCart.isEmpty) {
                                                     } else {
-                                                      Navigator.push(
+
+                                                    await  Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 MyViewPrint(
                                                                     currentCart,
-                                                                    totalPrice)),
-                                                      );
+                                                                    totalPrice,
+                                                                    (){
+                                                                      for(int i=0;i<allCart.length;i++){
+                                                                        (allCart[i].tableNo ==selectedTable)?cartBox.deleteAt(i):null;
+                                                                      }
+                                                                      Navigator.of(context).pop();
+
+                                                                    },
+                                                                    )),
+                                                      ).then((value) {
+                                                         for(int i=0;i<=cartBox.length;i++){
+                                                            (allCart[i].tableNo == selectedTable)?cartBox.deleteAt(i):null;
+                                                                      }
+                                                      });
+                                                     
                                                     }
                                                   }
                                                 },
@@ -918,11 +917,181 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showPrintedToast(BuildContext context) {
+  void _showPrintedToast(BuildContext context,String title) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Document printed successfully'),
+       SnackBar(
+        content: Text(title),
       ),
+    );
+  }
+
+   _showMyDialogAdd(List<Categories> myList,Box myBox) async {
+         TextEditingController controller = TextEditingController();
+    return showDialog<void>(
+      context: context,
+      // barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:  Text('Add Category'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children:  <Widget>[
+                TextFormField(
+decoration: InputDecoration(
+  fillColor: Colors.white,
+  filled: true,
+  hintText: 'Category Name',
+  hintStyle:TextStyle(fontSize: 15),//TextStyles.normalFontText.copyWith(fontSize: 15),
+  contentPadding: EdgeInsets.symmetric(horizontal:10),
+  border: InputBorder.none,
+     enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+    focusedBorder:  OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+  
+
+  
+),
+style: TextStyle(fontSize: 20),
+controller: controller,
+
+
+ keyboardType: TextInputType.name,
+)
+                // Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () {
+                Categories cat;
+                controller.text.isEmpty?
+                _showPrintedToast(context,"Category cannot be empty"):{
+                 cat =
+                     Categories(
+                        categoryName:
+                           controller.text,
+                        imageName: '', ),
+                           myList.where((element) => element.categoryName==cat.categoryName).toList().isEmpty?{myBox.add(cat),Navigator.of(context).pop()}:_showMyDialogError("${cat.categoryName} already exist"),
+                // Navigator.of(context).pop();
+              };},
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+               },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+   _showMyDialogAddSubCategory(List<SubCategory> myList,Box myBox) async {
+         TextEditingController controller = TextEditingController();
+         TextEditingController priceController = TextEditingController();
+    return showDialog<void>(
+      context: context,
+      // barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:  Text('Add SubCategory'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children:  <Widget>[
+                TextFormField(
+decoration: InputDecoration(
+  fillColor: Colors.white,
+  filled: true,
+  hintText: ' Name',
+  hintStyle:TextStyle(fontSize: 15),//TextStyles.normalFontText.copyWith(fontSize: 15),
+  contentPadding: EdgeInsets.symmetric(horizontal:10),
+  border: InputBorder.none,
+     enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+    focusedBorder:  OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+  
+
+  
+),
+style: TextStyle(fontSize: 20),
+controller: controller,
+
+
+ keyboardType: TextInputType.name,
+),    
+SizedBox(height: 10,),        
+
+  TextFormField(
+decoration: InputDecoration(
+  fillColor: Colors.white,
+  filled: true,
+  hintText: 'Price',
+  hintStyle:TextStyle(fontSize: 15),//TextStyles.normalFontText.copyWith(fontSize: 15),
+  contentPadding: EdgeInsets.symmetric(horizontal:10),
+  border: InputBorder.none,
+     enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+    focusedBorder:  OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+  
+
+  
+),
+
+style: TextStyle(fontSize: 20),
+controller: priceController,
+
+
+  keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+),
+                // Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () {
+               SubCategory sub;
+                controller.text.isEmpty?
+                _showPrintedToast(context,"Name cannot be empty"):
+                priceController.text.isEmpty?
+                _showPrintedToast(context,"Price cannot be empty")
+                :{
+                                                   sub  = SubCategory(
+                                                                                    categoryName: selectedCategory,
+                                                                                    itemImage: "",
+                                                                                    itemName: controller.text,
+                                                                                    price: double.tryParse(priceController.text),
+                                                                                    quantity: 1,
+                                                                                  ),
+                                                                        (myList.where((element) =>element.itemName==sub.itemName).toList().isEmpty)?myBox.add(sub):_showMyDialogError("${sub.itemName} already Exist"),
+              };},
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+               },
+            ),
+          ],
+        );
+      },
     );
   }
 
