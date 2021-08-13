@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget menuListTile({String title}) {
+Widget menuListTile({String title,int myIndex,int selectedIndex}) {
 
 
   return Container(
@@ -27,7 +27,7 @@ Widget menuListTile({String title}) {
           padding: EdgeInsets.only(bottom: 5, right: 20),
           // margin: EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
-              border: true
+              border: (myIndex==selectedIndex)
                   ? Border(bottom: BorderSide(color: Colors.green, width: 5))
                   : Border()),
           child: Text(

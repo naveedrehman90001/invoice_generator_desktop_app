@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
-import 'package:spicy_destop_invoic_app/examples/report.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:spicy_destop_invoic_app/models/cartModel.dart';
 
@@ -30,8 +28,9 @@ class _MyViewPrintState extends State<MyViewPrint> {
     return Container(
       color: Colors.green,
       child: PdfPreview(
-         
-                                                  maxPageWidth: 100,
+         allowSharing: false,
+        
+          maxPageWidth: 100,
           build: (format) =>_generatePdf(format,widget.allCart,widget.totalPrice ) ,//generateCalendar(format, _data),
           // actions: actions,
         onPrinted:Navigator.of(context).pop,
@@ -60,35 +59,9 @@ class _MyViewPrintState extends State<MyViewPrint> {
     await file.writeAsBytes(bytes);
     await OpenFile.open(file.path);
   }
-  //  Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
-  //   final pdf = Document();
-  //   final font = await PdfGoogleFonts.nunitoExtraLight();
-  //   print("print called");
 
-  //   pdf.addPage(
-  //   Page(
-  //       pageFormat: format,
-  //       build: (context) {
-  //         return Column(
-  //           children: [
-  //             SizedBox(
-  //               width: double.infinity,
-  //               child: FittedBox(
-  //                 child: Text(title, style: TextStyle(font: font)),
-  //               ),
-  //             ),
-  //             SizedBox(height: 20),
-  //             Flexible(child: FlutterLogo())
-  //           ],
-  //         );
-  //       },
-  //     ),
-  //   );
-
-  //   return pdf.save();
-  // }
-
-  Future<Uint8List> _generatePdf(PdfPageFormat format,List<CartModel> allCart,double totalPrice) async {
+  Future<Uint8List> 
+  _generatePdf(PdfPageFormat format,List<CartModel> allCart,double totalPrice) async {
     final pdf = pw.Document();//version: PdfVersion.pdf_1_5, compress: true
     // final font = await PdfGoogleFonts.nunitoExtraLight();
 
