@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-class Cat {
 
  List<Map<String , dynamic>> categoryJson = [
   {
@@ -78,14 +77,18 @@ class Cat {
     "img": ""
 
   },
+  {
+    "name" : "Potato ville",
+    "img": ""
+
+  },
  
 ];
 
-}
 
-class SubCategories {
 
-   List<Map<String , dynamic>> categoryJson = [
+
+   List<Map<String , dynamic>> subJson = [
 
      //1
   {
@@ -1063,7 +1066,7 @@ class SubCategories {
        'itemName': 'Turkish Beef Platter',
        'image':'',
        'quantity':1,
-       'price':420
+       'price':420.0
      },
 
      {
@@ -1071,49 +1074,49 @@ class SubCategories {
        'itemName': 'Chicken Lasagna',
        'image':'',
        'quantity':1,
-       'price':350
+       'price':350.0
      },
      {
        'category': 'Pasta',
        'itemName': 'Beef Lasagna',
        'image':'',
        'quantity':1,
-       'price':380
+       'price':380.0
      },
      {
        'category': 'Pasta',
        'itemName': 'Alfaredo Pasta',
        'image':'',
        'quantity':1,
-       'price':320
+       'price':320.0
      },
      {
        'category': 'Pasta',
        'itemName': 'Creamy Mushroom Chicken Pasta',
        'image':'',
        'quantity':1,
-       'price':360
+       'price':360.0
      },
      {
        'category': 'Pasta',
        'itemName': 'Spicy Red Sauce Pasta',
        'image':'',
        'quantity':1,
-       'price':300
+       'price':300.0
      },
      {
        'category': 'Soup',
        'itemName': 'Spice Affairs Special Soup',
        'image':'',
        'quantity':1,
-       'price':200
+       'price':200.0
      },
      {
        'category': 'Soup',
        'itemName': 'Chicken Corn Soup',
        'image':'',
        'quantity':1,
-       'price':150
+       'price':150.0
      },
 
      {
@@ -1121,7 +1124,7 @@ class SubCategories {
        'itemName': 'Vegetable Soup',
        'image':'',
        'quantity':1,
-       'price':120
+       'price':120.0
      },
 
      {
@@ -1129,80 +1132,79 @@ class SubCategories {
        'itemName': 'Cheese Sausages (6 pcs)',
        'image':'',
        'quantity':1,
-       'price':250
+       'price':250.0
      },
      {
        'category': 'Sausages',
        'itemName': 'Cheese Sausages (12 pcs)',
        'image':'',
        'quantity':1,
-       'price':499
+       'price':499.0
      },
      {
        'category': 'Sausages',
        'itemName': 'Onion Sausages (6 pcs)',
        'image':'',
        'quantity':1,
-       'price':240
+       'price':240.0
      },
      {
        'category': 'Sausages',
        'itemName': 'Onion Sausages (12 pcs)',
        'image':'',
        'quantity':1,
-       'price':420
+       'price':420.0
      },
      {
        'category': 'Sausages',
        'itemName': 'Masala Sausages (6 pcs)',
        'image':'',
        'quantity':1,
-       'price':200
+       'price':200.0
      },
      {
        'category': 'Sausages',
        'itemName': 'Masala Sausages (12 pcs)',
        'image':'',
        'quantity':1,
-       'price':399
+       'price':399.0
      },
 
      {
-       'category': 'Drink',
+       'category': 'Special Drinks',
        'itemName': 'Mint Margarita',
        'image':'',
        'quantity':1,
-       'price':180
+       'price':180.0
      },
      {
-       'category': 'Drink',
+       'category': 'Special Drinks',
        'itemName': 'Pinna Colada',
        'image':'',
        'quantity':1,
-       'price':120
+       'price':120.0
      },
      {
-       'category': 'Drink',
+       'category': 'Special Drinks',
        'itemName': 'Fresh Lame',
        'image':'',
        'quantity':1,
-       'price':170
+       'price':170.0
      },
      {
-       'category': 'Drink',
+       'category': 'Special Drinks',
        'itemName': 'Virgin Black Majito',
        'image':'',
        'quantity':1,
-       'price':180
+       'price':180.0
      },
      {
-       'category': 'Drink',
+       'category': 'Special Drinks',
        'itemName': 'Soft Drinks Regular',
        'image':'',
        'quantity':1,
-       'price':180
+       'price':180.0
      },
 
    ];
-}
 

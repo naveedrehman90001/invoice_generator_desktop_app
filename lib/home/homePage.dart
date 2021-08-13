@@ -279,6 +279,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
+                              
                               Container(
                                   height:
                                       MediaQuery.of(context).size.height * 0.38,
@@ -316,7 +317,10 @@ class _HomePageState extends State<HomePage> {
                                                               Icon(Icons.add),
                                                           onTap: () {
 
-   
+                                                          //  categoryJson.forEach((element) async { 
+                                                          //  Categories categories =   Categories.fromJson(element);
+                                                          //  await  categBox.add(categories);
+                                                          //  });
                                                           _showMyDialogAdd(cate,categBox);
                                                            
                                                             
@@ -430,14 +434,19 @@ class _HomePageState extends State<HomePage> {
                                                         return Container(
                                                           child: (selectedCategory ==
                                                                   null)
-                                                              ? Center(
-                                                                  child: Text(
-                                                                    'Category not Selected',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
+                                                              ? InkWell(
+                                                                onTap: (){
+                                                                  subCatBox.clear();
+                                                                },
+                                                                child: Center(
+                                                                    child: Text(
+                                                                      'Category not Selected',
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .white),
+                                                                    ),
                                                                   ),
-                                                                )
+                                                              )
                                                               : GridView
                                                                   .builder(
                                                                       gridDelegate:
@@ -457,7 +466,12 @@ class _HomePageState extends State<HomePage> {
                                                                                 index)
                                                                             ? InkWell(
                                                                                 onTap: () async {
-                                               _showMyDialogAddSubCategory(fileredSub, subCatBox);
+                                              //  _showMyDialogAddSubCategory(fileredSub, subCatBox);
+                                              subJson.forEach((element) async { 
+                                                SubCategory subM = SubCategory.fromJson(element);
+                                                await subCatBox.add(subM);
+
+                                              });
                                                                                   
                                                                                 },
                                                                                 child: Container(
@@ -843,7 +857,7 @@ class _HomePageState extends State<HomePage> {
                                                                     () async {
                                                                       for(int i=0;i<allCart.length;i++){
                                                                         (allCart[i].tableNo ==selectedTable)?await cartBox.deleteAt(i):null;
-                                                                        
+
                                                                       }
                                                                       Navigator.of(context).pop();
 
@@ -1081,7 +1095,7 @@ controller: priceController,
                                                                                     price: double.tryParse(priceController.text),
                                                                                     quantity: 1,
                                                                                   ),
-                                                                        (myList.where((element) =>element.itemName==sub.itemName).toList().isEmpty)?myBox.add(sub):_showMyDialogError("${sub.itemName} already Exist"),
+                                                                        (myList.where((element) =>element.itemName==sub.itemName).toList().isEmpty)?{myBox.add(sub),Navigator.of(context).pop()}:_showMyDialogError("${sub.itemName} already Exist"),
               };},
             ),
             TextButton(

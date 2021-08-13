@@ -17,4 +17,10 @@ class Categories {
    this.imageName,
  }); 
 
+
+   Categories.fromJson(Map<String, dynamic> json) {
+    categoryName = json['name'];
+    imageName = json['img'];
+  }
+
 }

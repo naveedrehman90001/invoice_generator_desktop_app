@@ -19,4 +19,12 @@ SubCategory({
  this.categoryName ,this.itemName,this.itemImage,this.quantity,this.price
 });
 
+  SubCategory.fromJson(Map<String, dynamic> json) {
+    categoryName = json['category'].toString();
+    itemName = json['itemName'].toString();
+    itemImage = json['image'].toString();
+    quantity = 1;//int.parse(json['quantity']);
+    price = json['price'].toDouble();
+  }
+
 }
