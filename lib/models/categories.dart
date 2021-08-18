@@ -11,10 +11,15 @@ class Categories {
 @HiveField(1)
  String imageName;
 
+ String key;
+
+
+
 
  Categories({
    this.categoryName,
    this.imageName,
+   this.key
  }); 
 
 
