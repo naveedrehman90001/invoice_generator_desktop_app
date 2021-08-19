@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:spicy_destop_invoic_app/models/subCategory.dart';
 
-Widget itemTile(SubCategory subCategory){
+Widget itemTile({SubCategory subCategory,Function delete,Function edit}){
   return Container(
       margin: EdgeInsets.all(10),
       // padding: EdgeInsets.all(10),
@@ -29,28 +29,7 @@ Widget itemTile(SubCategory subCategory){
                   fontSize: 20),
             ),
           ),
-          // Container(
-          //   margin: EdgeInsets.only(bottom:10,left:10,right:10),
-          //   child: Text(
-          //     'product description',
-          //     style: TextStyle(
-          //         color: Colors.black45,
-          //         fontWeight: FontWeight.w600,
-          //         fontSize: 14),
-          //   ),
-          // ),
-
-          // Center(
-          //   child: Container(
-          //         width: 100,
-          //         height: 100,
-          //         decoration: BoxDecoration(
-          //             image: DecorationImage(image: AssetImage('assets/images/splogo.jpeg'))),
-          //       ),
-          // ),
-
-              // Center(
-              //   child:
+         
               Spacer(),
                  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -77,23 +56,17 @@ Widget itemTile(SubCategory subCategory){
                     ),
                   ],
                 ),
-              // ),
-          // Expanded(
-          //     child: Column(
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     SizedBox(
-          //       height: 20,
-          //     ),
-          //     // Container(
-          //     //   width: 130,
-          //     //   height: 130,
-          //     //   decoration: BoxDecoration(
-          //     //       image: DecorationImage(image: AssetImage('assets/images/espresso.51d468cc.jpg'))),
-          //     // ),
-              
-          //   ],
-          // ))
+        Row(children: [
+          IconButton(icon: Icon(Icons.edit),
+          iconSize: 30,
+           onPressed: edit
+           ),
+            IconButton(icon: Icon(Icons.delete),
+          iconSize: 30,
+           onPressed: delete
+           ),
+        ],)
+          
         ],
       ),
     );

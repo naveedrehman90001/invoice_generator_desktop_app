@@ -61,10 +61,24 @@ class _HomePageState extends State<HomePage> {
               valueListenable: Hive.box<CartModel>(cartBox).listenable(),
               builder: (context, cartBox, _) {
                 var allCart = cartBox.values.toList().cast<CartModel>();
+                var allKeys = cartBox.keys.toList();
+                List<CartModel> myNewCart = List();
+
+                for (int i = 0; i < allCart.length; i++) {
+                  CartModel a = CartModel(
+                    img: allCart[i].img,
+                    item: allCart[i].item,
+                    price: allCart[i].price,
+                    quantity: allCart[i].quantity,
+                    tableNo: allCart[i].tableNo,
+                    key: allKeys[i].toInt(),
+                  );
+                  myNewCart.add(a);
+                }
 
                 List<CartModel> currentCart = List();
                 if (selectedTable != null) {
-                  currentCart = allCart
+                  currentCart = myNewCart
                       .where((element) => (element.tableNo == selectedTable))
                       .toList();
                   totalPrice = 0;
@@ -288,8 +302,7 @@ class _HomePageState extends State<HomePage> {
                                                   setState(() {});
                                                 },
                                                 onLongPress: () {
-                                                  // categBox.deleteAt(
-                                                  //     index);
+                                                  categBox.deleteAt(index);
                                                   // categBox.clear();
                                                   // categBox.delete(myRealList[index].key);
                                                 },
@@ -369,134 +382,220 @@ class _HomePageState extends State<HomePage> {
                                                             .toList()
                                                             .cast<
                                                                 SubCategory>();
-                                                    List<SubCategory>
-                                                        fileredSub = [];
-                                                    if (selectedCategory !=
-                                                        null) {
-                                                      fileredSub = subCate
-                                                          .where((element) =>
-                                                              (element
-                                                                  .categoryName
-                                                                  .contains(
-                                                                      selectedCategory)))
-                                                          .toList();
-                                                    }
+                                                    print(subCate.length);
+                                                    // List<SubCategory> fileredSub =
+                                                    //     [];
+                                                    // if (selectedCategory != null) {
+                                                    //   fileredSub = subCate
+                                                    //       .where((element) => (element
+                                                    //           .categoryName
+                                                    //           .contains(
+                                                    //               selectedCategory)))
+                                                    //       .toList();
+                                                    // }
                                                     return Container(
-                                                      child: (selectedCategory ==
-                                                              null)
-                                                          ? InkWell(
-                                                              onTap: () {
-                                                                subCatBox
-                                                                    .clear();
-                                                              },
-                                                              child: Center(
-                                                                child: Text(
-                                                                  'Category not Selected',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                              ),
-                                                            )
-                                                          :
-                                                          ListView(
-                                                            children:[
-                                                             Wrap(
-                                                            direction: Axis.horizontal,
-                                                              runSpacing: 10,
-                                                              spacing: 20,
-  children: 
-    displayItemTileWidget(fileredSub),
-  
-),]
-                                                          ) ,
-                                                          // GridView.builder(
-                                                          //     gridDelegate:
-                                                          //         SliverGridDelegateWithFixedCrossAxisCount(
-                                                          //       crossAxisCount:
-                                                          //           4,
-                                                          //       childAspectRatio:
-                                                          //           0.90,
-                                                          //     ),
-                                                          //     itemCount: fileredSub
-                                                          //             .length +
-                                                          //         1,
-                                                          //     // cate[selectedCategoryIndex].subcatery.length + 1,
-                                                          //     itemBuilder:
-                                                          //         (_, index) {
-                                                          //       return (fileredSub
-                                                          //                   .length ==
-                                                          //               index)
-                                                          //           ? InkWell(
-                                                          //               onTap:
-                                                          //                   () async {
-                                                          //                 //  _showMyDialogAddSubCategory(fileredSub, subCatBox);
+                                                      child:
+                                                          (selectedCategory ==
+                                                                  null)
+                                                              ? InkWell(
+                                                                  onTap: () {
+                                                                    subCatBox
+                                                                        .clear();
+                                                                  },
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      'Category not Selected',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : ListView(
+                                                                  children: [
+                                                                      Wrap(
+                                                                        direction:
+                                                                            Axis.horizontal,
+                                                                        runSpacing:
+                                                                            10,
+                                                                        spacing:
+                                                                            20,
+                                                                        children: List<Widget>.generate(
+                                                                            subCate.length +
+                                                                                1,
+                                                                            (index) {
+                                                                          return (subCate.length == index)
+                                                                              ? InkWell(
+                                                                                  onTap: () async {
+                                                                                    //  _showMyDialogAddSubCategory(fileredSub, subCatBox);
 
-                                                          //                 _showMyDialogAddSubCategory(
-                                                          //                     fileredSub,
-                                                          //                     subCatBox);
-                                                          //               },
-                                                          //               onLongPress:
-                                                          //                   () {
-                                                          //                 changeNum2++;
-                                                          //                 setState(
-                                                          //                     () {});
-                                                          //                 if (changeNum2 ==
-                                                          //                     2) {
-                                                          //                   subJson.forEach((element) async {
-                                                          //                     print(element['itemName']);
-                                                          //                     SubCategory subM = SubCategory.fromJson(element);
-                                                          //                     print(subM.categoryName);
-                                                          //                     await subCatBox.add(subM).then((value) {
-                                                          //                       print('my val is $value');
-                                                          //                     });
-                                                          //                   });
-                                                          //                 }
-                                                          //               },
-                                                          //               child:
-                                                          //                   Container(
-                                                          //                 // color: Colors.green,
-                                                          //                 margin:
-                                                          //                     EdgeInsets.all(10),
-                                                          //                 decoration:
-                                                          //                     BoxDecoration(
-                                                          //                   color:
-                                                          //                       Colors.purple,
-                                                          //                   borderRadius:
-                                                          //                       BorderRadius.circular(5.0),
-                                                          //                 ),
-                                                          //                 child:
-                                                          //                     Icon(
-                                                          //                   Icons.add,
-                                                          //                   color:
-                                                          //                       Colors.white,
-                                                          //                 ),
-                                                          //               ),
-                                                          //             )
-                                                          //           : InkWell(
-                                                          //               onTap:
-                                                          //                   () {
-                                                          //                 CartModel
-                                                          //                     mycart;
-                                                          //                 (selectedTable == null)
-                                                          //                     ? {
-                                                          //                         print('error'),
-                                                          //                         _showMyDialogError('Select table First'),
-                                                          //                       }
-                                                          //                     : {
-                                                          //                         mycart = CartModel(
-                                                          //                           img: fileredSub[index].itemImage,
-                                                          //                           item: fileredSub[index].itemName,
-                                                          //                           price: fileredSub[index].price,
-                                                          //                           quantity: fileredSub[index].quantity,
-                                                          //                           tableNo: selectedTable,
-                                                          //                         ),
-                                                          //                         (currentCart.where((element) => (element.item == mycart.item)).toList().isEmpty) ? cartBox.add(mycart) : _showMyDialogError('Add quantity in Cart'), //_showPrintedToast(context)
-                                                          //                       };
-                                                          //               },
-                                                          //               child: itemTile(
-                                                          //                   fileredSub[index]));
-                                                          //     }),
+                                                                                    _showMyDialogAddSubCategory(subCate, subCatBox);
+                                                                                  },
+                                                                                  onLongPress: () {
+                                                                                    changeNum2++;
+                                                                                    setState(() {});
+                                                                                    if (changeNum2 == 2) {
+                                                                                      subJson.forEach((element) async {
+                                                                                        print(element['itemName']);
+                                                                                        SubCategory subM = SubCategory.fromJson(element);
+                                                                                        print(subM.categoryName);
+                                                                                        await subCatBox.add(subM).then((value) {
+                                                                                          print('my val is $value');
+                                                                                        });
+                                                                                      });
+                                                                                    }
+                                                                                  },
+                                                                                  child: Container(
+                                                                                    height: 200,
+                                                                                    width: 200,
+                                                                                    margin: EdgeInsets.all(10),
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: Colors.purple,
+                                                                                      borderRadius: BorderRadius.circular(5.0),
+                                                                                    ),
+                                                                                    child: Icon(
+                                                                                      Icons.add,
+                                                                                      color: Colors.white,
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              : (subCate[index].categoryName == selectedCategory)
+                                                                                  ? InkWell(
+                                                                                      onTap: () {
+                                                                                        CartModel mycart;
+                                                                                        (selectedTable == null)
+                                                                                            ? {
+                                                                                                print('error'),
+                                                                                                _showMyDialogError('Select table First'),
+                                                                                              }
+                                                                                            : {
+                                                                                                mycart = CartModel(
+                                                                                                  img: subCate[index].itemImage,
+                                                                                                  item: subCate[index].itemName,
+                                                                                                  price: subCate[index].price,
+                                                                                                  quantity: subCate[index].quantity,
+                                                                                                  tableNo: selectedTable,
+                                                                                                ),
+
+                                                                                                (currentCart.where((element) => (element.item == mycart.item)).toList().isEmpty) ? cartBox.add(mycart) : _showMyDialogError('Add quantity in Cart'), //_showPrintedToast(context)
+                                                                                              };
+                                                                                      },
+                                                                                      child: Container(
+                                                                                          height: 200,
+                                                                                          width: 200,
+                                                                                          child: itemTile(
+                                                                                              subCategory: subCate[index],
+                                                                                              edit: () {
+                                                                                                SubCategory b = SubCategory(
+                                                                                                  categoryName: subCate[index].categoryName,
+                                                                                                  itemImage: subCate[index].itemImage,
+                                                                                                  itemName: subCate[index].itemName,
+                                                                                                  price: subCate[index].price + 5,
+                                                                                                  quantity: subCate[index].quantity,
+                                                                                                );
+                                                                                                subCatBox.putAt(index, b);
+                                                                                              },
+                                                                                              delete: () {
+                                                                                                subCatBox.deleteAt(index);
+                                                                                              })),
+                                                                                    )
+                                                                                  : SizedBox();
+                                                                        }),
+                                                                        // displayItemTileWidget(
+                                                                        //   myList: subCate,
+                                                                        //   currCart: currentCart,
+                                                                        //   myBox: cartBox
+                                                                        //     // subCate,currentCart,
+                                                                        //     ),
+                                                                      ),
+                                                                    ]),
+                                                      // GridView.builder(
+                                                      //     gridDelegate:
+                                                      //         SliverGridDelegateWithFixedCrossAxisCount(
+                                                      //       crossAxisCount:
+                                                      //           4,
+                                                      //       childAspectRatio:
+                                                      //           0.90,
+                                                      //     ),
+                                                      //     itemCount: fileredSub
+                                                      //             .length +
+                                                      //         1,
+                                                      //     // cate[selectedCategoryIndex].subcatery.length + 1,
+                                                      //     itemBuilder:
+                                                      //         (_, index) {
+                                                      //       return (fileredSub
+                                                      //                   .length ==
+                                                      //               index)
+                                                      //           ? InkWell(
+                                                      //               onTap:
+                                                      //                   () async {
+                                                      //                 //  _showMyDialogAddSubCategory(fileredSub, subCatBox);
+
+                                                      //                 _showMyDialogAddSubCategory(
+                                                      //                     fileredSub,
+                                                      //                     subCatBox);
+                                                      //               },
+                                                      //               onLongPress:
+                                                      //                   () {
+                                                      //                 changeNum2++;
+                                                      //                 setState(
+                                                      //                     () {});
+                                                      //                 if (changeNum2 ==
+                                                      //                     2) {
+                                                      //                   subJson.forEach((element) async {
+                                                      //                     print(element['itemName']);
+                                                      //                     SubCategory subM = SubCategory.fromJson(element);
+                                                      //                     print(subM.categoryName);
+                                                      //                     await subCatBox.add(subM).then((value) {
+                                                      //                       print('my val is $value');
+                                                      //                     });
+                                                      //                   });
+                                                      //                 }
+                                                      //               },
+                                                      //               child:
+                                                      //                   Container(
+                                                      //                 // color: Colors.green,
+                                                      //                 margin:
+                                                      //                     EdgeInsets.all(10),
+                                                      //                 decoration:
+                                                      //                     BoxDecoration(
+                                                      //                   color:
+                                                      //                       Colors.purple,
+                                                      //                   borderRadius:
+                                                      //                       BorderRadius.circular(5.0),
+                                                      //                 ),
+                                                      //                 child:
+                                                      //                     Icon(
+                                                      //                   Icons.add,
+                                                      //                   color:
+                                                      //                       Colors.white,
+                                                      //                 ),
+                                                      //               ),
+                                                      //             )
+                                                      //           : InkWell(
+                                                      //               onTap:
+                                                      //                   () {
+                                                      //                 CartModel
+                                                      //                     mycart;
+                                                      //                 (selectedTable == null)
+                                                      //                     ? {
+                                                      //                         print('error'),
+                                                      //                         _showMyDialogError('Select table First'),
+                                                      //                       }
+                                                      //                     : {
+                                                      //                         mycart = CartModel(
+                                                      //                           img: fileredSub[index].itemImage,
+                                                      //                           item: fileredSub[index].itemName,
+                                                      //                           price: fileredSub[index].price,
+                                                      //                           quantity: fileredSub[index].quantity,
+                                                      //                           tableNo: selectedTable,
+                                                      //                         ),
+                                                      //                         (currentCart.where((element) => (element.item == mycart.item)).toList().isEmpty) ? cartBox.add(mycart) : _showMyDialogError('Add quantity in Cart'), //_showPrintedToast(context)
+                                                      //                       };
+                                                      //               },
+                                                      //               child: itemTile(
+                                                      //                   fileredSub[index]));
+                                                      //     }),
                                                     );
                                                   })),
                                     ],
@@ -679,14 +778,18 @@ class _HomePageState extends State<HomePage> {
                                                               () {},
                                                             )),
                                                   ).then((value) {
-                                                    for (int i = 0;
-                                                        i <= cartBox.length;
-                                                        i++) {
-                                                      (allCart[i].tableNo ==
-                                                              selectedTable)
-                                                          ? cartBox.deleteAt(i)
-                                                          : null;
-                                                    }
+                                                    List keys = [];
+                                                    currentCart
+                                                        .forEach((element) {
+                                                      keys.add(element.key);
+                                                    });
+
+                                                    print(keys.length);
+                                                    cartBox
+                                                        .deleteAll(keys)
+                                                        .then((val) {
+                                                      print('in then');
+                                                    });
                                                   });
                                                 }
                                               }
@@ -722,19 +825,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
- List<Widget> displayItemTileWidget(List<SubCategory> myList){
-   List<Widget> widgetList = List();
-  myList.forEach((element) { 
-    (element.categoryName ==selectedCategory)?
-   widgetList.add(Container(
-     height: 200,
-     width: 200,
-     child:
-   
-    itemTile(element))):widgetList.add(SizedBox()); 
-  });
-  return widgetList;
- }
+  List<Widget> displayItemTileWidget(
+      {List<SubCategory> myList,
+      List<CartModel> currCart,
+      Box myBox,
+      Box subC}) {
+    List<Widget> widgetList = List();
+    myList.forEach((element) {});
+
+    return widgetList;
+  }
 
   Future<void> _showMyDialogError(String error) async {
     return showDialog<void>(

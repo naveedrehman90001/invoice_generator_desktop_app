@@ -16,7 +16,7 @@ class CartModel {
 @HiveField(4)
   int tableNo;
 
-  String key;
+  int key;
 
   CartModel({this.item,this.img,this.price,this.quantity,this.tableNo,this.key});
 }
